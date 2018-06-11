@@ -1,0 +1,1046 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A2B17571-2E57-4082-ABA8-3F1EA3129E38}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DSASAddin</RootNamespace>
+    <AssemblyName>DSASAddin</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>DSASAddin.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>DSASAddin.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AMS.TextBox">
+      <HintPath>.\AMS.TextBox.dll</HintPath>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.3DAnalyst, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.ADF.Local, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.AxControls, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL" />
+    <Reference Include="ESRI.ArcGIS.Carto, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Controls, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.DataSourcesGDB, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Desktop.AddIns">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Display, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Framework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Geodatabase, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Geometry, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.GlobeCore, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Output, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.SystemUI, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Version, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Humanizer, Version=2.2.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
+      <HintPath>packages\Humanizer.Core.2.2.0\lib\netstandard1.0\Humanizer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="IronPython, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\IronPython.2.7.7\lib\Net45\IronPython.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="IronPython.Modules, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\IronPython.2.7.7\lib\Net45\IronPython.Modules.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="IronPython.SQLite, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\IronPython.2.7.7\lib\Net45\IronPython.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="IronPython.Wpf, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\IronPython.2.7.7\lib\Net45\IronPython.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Dynamic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Scripting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.AspNet, Version=1.1.1.21, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Scripting.AspNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Metadata, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Scripting.Metadata.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="CSharpHelper" />
+    <Import Include="ESRI.ArcGIS.ADF.Serialization" />
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Amy_Button.vb" />
+    <Compile Include="AttributeToolbarButton.vb" />
+    <Compile Include="AttributeToolbarForm.Designer.vb">
+      <DependentUpon>AttributeToolbarForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="AttributeToolbarForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BaselineSnapper.vb" />
+    <Compile Include="CastTransectsForm.designer.vb">
+      <DependentUpon>CastTransectsForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CastTransectsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DSASMapDataExtension.vb" />
+    <Compile Include="DSAS.vb" />
+    <Compile Include="ClipButton.vb" />
+    <Compile Include="CastButton.vb" />
+    <Compile Include="ForecastingBiasOptionsForm.Designer.vb">
+      <DependentUpon>ForecastingBiasOptionsForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ForecastingBiasOptionsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HelpButton.vb" />
+    <Compile Include="DefaultsButton.vb" />
+    <Compile Include="CalculateButton.vb" />
+    <Compile Include="CalcStatsForm.designer.vb">
+      <DependentUpon>CalcStatsForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CalcStatsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CI.vb" />
+    <Compile Include="Config.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Config.esriaddinx</DependentUpon>
+    </Compile>
+    <Compile Include="DoNotShowAgainForm.Designer.vb">
+      <DependentUpon>DoNotShowAgainForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DoNotShowAgainForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DSASUtility.vb" />
+    <Compile Include="EsriXslExtSim.vb" />
+    <Compile Include="Geodbases.vb" />
+    <Compile Include="ipy.vb" />
+    <Compile Include="LandRelatiToBaseliHelpForm.Designer.vb">
+      <DependentUpon>LandRelatiToBaseliHelpForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="LandRelatiToBaseliHelpForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapUtility.vb" />
+    <Compile Include="Metadata.vb" />
+    <Compile Include="LegacyTransectConverter.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="OldCast.vb" />
+    <Compile Include="PopupWithImage.Designer.vb">
+      <DependentUpon>PopupWithImage.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PopupWithImage.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RateCalculation.vb" />
+    <Compile Include="SCEClipForm.Designer.vb">
+      <DependentUpon>SCEClipForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="SCEClipForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ShorelineForecastButton.vb" />
+    <Compile Include="ShorelineForecastForm.Designer.vb">
+      <DependentUpon>ShorelineForecastForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ShorelineForecastForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ShorelineHelpForm.Designer.vb">
+      <DependentUpon>ShorelineHelpForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ShorelineHelpForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stat.vb" />
+    <Compile Include="Topology.vb" />
+    <Compile Include="TransectAutoFix.vb" />
+    <Compile Include="UserSettings.vb" />
+    <Compile Include="XML2HT.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AttributeToolbarForm.resx">
+      <DependentUpon>AttributeToolbarForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CalcStatsForm.resx">
+      <DependentUpon>CalcStatsForm.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CastTransectsForm.resx">
+      <DependentUpon>CastTransectsForm.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DoNotShowAgainForm.resx">
+      <DependentUpon>DoNotShowAgainForm.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ForecastingBiasOptionsForm.resx">
+      <DependentUpon>ForecastingBiasOptionsForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LandRelatiToBaseliHelpForm.resx">
+      <DependentUpon>LandRelatiToBaseliHelpForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PopupWithImage.resx">
+      <DependentUpon>PopupWithImage.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SCEClipForm.resx">
+      <DependentUpon>SCEClipForm.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SetDefaultsForm.resx">
+      <DependentUpon>SetDefaultsForm.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ShorelineForecastForm.resx">
+      <DependentUpon>ShorelineForecastForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ShorelineHelpForm.resx">
+      <DependentUpon>ShorelineHelpForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SplashScreen.resx">
+      <DependentUpon>SplashScreen.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <AddInContent Include="Install\DSAShelp.chm" />
+    <None Include="Install\Lib\ensurepip\_bundled\pip-8.1.1-py2.py3-none-any.whl" />
+    <None Include="Install\Lib\ensurepip\_bundled\setuptools-20.10.1-py2.py3-none-any.whl" />
+    <None Include="packages.config" />
+    <None Include="user.config" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\Lib\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Config.esriaddinx">
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <Generator>ArcGISAddInHostGenerator</Generator>
+      <LastGenOutput>Config.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
+    </AddInContent>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AboutButton.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="SetDefaultsForm.designer.vb">
+      <DependentUpon>SetDefaultsForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="SetDefaultsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SplashScreen.Designer.vb">
+      <DependentUpon>SplashScreen.vb</DependentUpon>
+    </Compile>
+    <Compile Include="SplashScreen.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <AddInContent Include="Images\Tool1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="TransectLyrToolCtl.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DSASExtension.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="ESRI.ArcGIS.Editor">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DSASEditorExtension.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="ESRI.ArcGIS.ArcMapUI">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\aboutDSAS.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DSAS_tables.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\recalculate.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\about.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\scissors-32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\help.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\defaults.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\castnormal.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Install\template\calc\DSASCore.calc.exe" />
+    <AddInContent Include="Install\template\calc\DSASCore.info.xml" />
+    <AddInContent Include="Install\template\calc\ReadMe_calc.txt" />
+    <AddInContent Include="Install\template\data\ReadMe_data.txt" />
+    <AddInContent Include="Install\template\metadata\DSAS_Metadata_Template.xml" />
+    <AddInContent Include="Install\template\metadata\ReadMe_metadata.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSharpHelper\CSharpHelper.csproj">
+      <Project>{0fa53e8b-d384-4942-b2a8-581153212740}</Project>
+      <Name>CSharpHelper</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\attribute_button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\attribute_button_vi8_icon.ico" />
+    <AddInContent Include="Images\Baseline_Graphic_UPDATE-01.jpg" />
+    <AddInContent Include="Images\Baseline_Graphic_UPDATE-02.jpg" />
+    <Content Include="Images\Baseline_HELP_Graphics_UPDATE4-RIGHT.png" />
+    <Content Include="Images\baseline_search_distance_help.png" />
+    <AddInContent Include="Images\sce_button.bmp" />
+    <Content Include="Images\calc_stat_Yhn_icon.ico" />
+    <Content Include="Images\castnormal_5p6_icon.ico" />
+    <Content Include="Images\Cast_transects_search-spacing-03.jpg" />
+    <Content Include="Images\Cast_transects_search-spacing-04.jpg" />
+    <Content Include="Images\cast_transect_4Bm_icon.ico" />
+    <AddInContent Include="Images\cog.png" />
+    <AddInContent Include="Images\crystal_ball.png" />
+    <Content Include="Images\cog_0pm_icon.ico" />
+    <Content Include="Images\crystal_ball_zn3_icon.ico" />
+    <Content Include="Images\defaults_fVL_icon.ico" />
+    <AddInContent Include="Install\usgs_scripts\summaryCalcsLookup.py" />
+    <AddInContent Include="Install\usgs_scripts\DSAS_kalmanfilter.py" />
+    <AddInContent Include="Install\usgs_scripts\main_forecasting.py" />
+    <None Include="Images\folder.png" />
+    <Content Include="Images\landward1.png" />
+    <Content Include="Images\landward2.png" />
+    <Content Include="Images\landward3.png" />
+    <Content Include="Images\recalculate_PpQ_icon.ico" />
+    <Content Include="Images\sce_button_Rkg_icon.ico" />
+    <Content Include="Images\seaward1.png" />
+    <Content Include="Images\seaward2.png" />
+    <Content Include="Images\seaward3.png" />
+    <Content Include="Images\set_defaults_8sl_icon.ico" />
+    <Content Include="Install\Lib\abc.py" />
+    <Content Include="Install\Lib\aifc.py" />
+    <Content Include="Install\Lib\antigravity.py" />
+    <Content Include="Install\Lib\anydbm.py" />
+    <Content Include="Install\Lib\argparse.py" />
+    <Content Include="Install\Lib\ast.py" />
+    <Content Include="Install\Lib\asynchat.py" />
+    <Content Include="Install\Lib\asyncore.py" />
+    <Content Include="Install\Lib\atexit.py" />
+    <Content Include="Install\Lib\audiodev.py" />
+    <Content Include="Install\Lib\base64.py" />
+    <Content Include="Install\Lib\BaseHTTPServer.py" />
+    <Content Include="Install\Lib\Bastion.py" />
+    <Content Include="Install\Lib\bdb.py" />
+    <Content Include="Install\Lib\binhex.py" />
+    <Content Include="Install\Lib\bisect.py" />
+    <Content Include="Install\Lib\calendar.py" />
+    <Content Include="Install\Lib\cgi.py" />
+    <Content Include="Install\Lib\CGIHTTPServer.py" />
+    <Content Include="Install\Lib\cgitb.py" />
+    <Content Include="Install\Lib\chunk.py" />
+    <Content Include="Install\Lib\cmd.py" />
+    <Content Include="Install\Lib\code.py" />
+    <Content Include="Install\Lib\codecs.py" />
+    <Content Include="Install\Lib\codeop.py" />
+    <Content Include="Install\Lib\collections.py" />
+    <Content Include="Install\Lib\colorsys.py" />
+    <Content Include="Install\Lib\commands.py" />
+    <Content Include="Install\Lib\compileall.py" />
+    <Content Include="Install\Lib\ConfigParser.py" />
+    <Content Include="Install\Lib\contextlib.py" />
+    <Content Include="Install\Lib\Cookie.py" />
+    <Content Include="Install\Lib\cookielib.py" />
+    <Content Include="Install\Lib\copy.py" />
+    <Content Include="Install\Lib\csv.py" />
+    <Content Include="Install\Lib\ctypes\macholib\dyld.py" />
+    <Content Include="Install\Lib\ctypes\macholib\dylib.py" />
+    <Content Include="Install\Lib\ctypes\macholib\framework.py" />
+    <Content Include="Install\Lib\ctypes\macholib\__init__.py" />
+    <Content Include="Install\Lib\ctypes\util.py" />
+    <Content Include="Install\Lib\ctypes\wintypes.py" />
+    <Content Include="Install\Lib\ctypes\_endian.py" />
+    <Content Include="Install\Lib\ctypes\__init__.py" />
+    <Content Include="Install\Lib\decimal.py" />
+    <Content Include="Install\Lib\difflib.py" />
+    <Content Include="Install\Lib\dircache.py" />
+    <Content Include="Install\Lib\dis.py" />
+    <Content Include="Install\Lib\distutils\archive_util.py" />
+    <Content Include="Install\Lib\distutils\bcppcompiler.py" />
+    <Content Include="Install\Lib\distutils\ccompiler.py" />
+    <Content Include="Install\Lib\distutils\cmd.py" />
+    <Content Include="Install\Lib\distutils\command\bdist.py" />
+    <Content Include="Install\Lib\distutils\command\bdist_dumb.py" />
+    <Content Include="Install\Lib\distutils\command\bdist_rpm.py" />
+    <Content Include="Install\Lib\distutils\command\bdist_wininst.py" />
+    <Content Include="Install\Lib\distutils\command\build.py" />
+    <Content Include="Install\Lib\distutils\command\build_clib.py" />
+    <Content Include="Install\Lib\distutils\command\build_ext.py" />
+    <Content Include="Install\Lib\distutils\command\build_py.py" />
+    <Content Include="Install\Lib\distutils\command\build_scripts.py" />
+    <Content Include="Install\Lib\distutils\command\check.py" />
+    <Content Include="Install\Lib\distutils\command\clean.py" />
+    <Content Include="Install\Lib\distutils\command\config.py" />
+    <Content Include="Install\Lib\distutils\command\install.py" />
+    <Content Include="Install\Lib\distutils\command\install_data.py" />
+    <Content Include="Install\Lib\distutils\command\install_egg_info.py" />
+    <Content Include="Install\Lib\distutils\command\install_headers.py" />
+    <Content Include="Install\Lib\distutils\command\install_lib.py" />
+    <Content Include="Install\Lib\distutils\command\install_scripts.py" />
+    <Content Include="Install\Lib\distutils\command\register.py" />
+    <Content Include="Install\Lib\distutils\command\sdist.py" />
+    <Content Include="Install\Lib\distutils\command\upload.py" />
+    <Content Include="Install\Lib\distutils\command\__init__.py" />
+    <Content Include="Install\Lib\distutils\config.py" />
+    <Content Include="Install\Lib\distutils\core.py" />
+    <Content Include="Install\Lib\distutils\cygwinccompiler.py" />
+    <Content Include="Install\Lib\distutils\debug.py" />
+    <Content Include="Install\Lib\distutils\dep_util.py" />
+    <Content Include="Install\Lib\distutils\dir_util.py" />
+    <Content Include="Install\Lib\distutils\dist.py" />
+    <Content Include="Install\Lib\distutils\emxccompiler.py" />
+    <Content Include="Install\Lib\distutils\errors.py" />
+    <Content Include="Install\Lib\distutils\extension.py" />
+    <Content Include="Install\Lib\distutils\fancy_getopt.py" />
+    <Content Include="Install\Lib\distutils\filelist.py" />
+    <Content Include="Install\Lib\distutils\file_util.py" />
+    <Content Include="Install\Lib\distutils\log.py" />
+    <Content Include="Install\Lib\distutils\msvccompiler.py" />
+    <Content Include="Install\Lib\distutils\spawn.py" />
+    <Content Include="Install\Lib\distutils\sysconfig.py" />
+    <Content Include="Install\Lib\distutils\text_file.py" />
+    <Content Include="Install\Lib\distutils\unixccompiler.py" />
+    <Content Include="Install\Lib\distutils\util.py" />
+    <Content Include="Install\Lib\distutils\version.py" />
+    <Content Include="Install\Lib\distutils\versionpredicate.py" />
+    <Content Include="Install\Lib\distutils\__init__.py" />
+    <Content Include="Install\Lib\doctest.py" />
+    <Content Include="Install\Lib\DocXMLRPCServer.py" />
+    <Content Include="Install\Lib\dumbdbm.py" />
+    <Content Include="Install\Lib\dummy_thread.py" />
+    <Content Include="Install\Lib\dummy_threading.py" />
+    <Content Include="Install\Lib\email\base64mime.py" />
+    <Content Include="Install\Lib\email\charset.py" />
+    <Content Include="Install\Lib\email\encoders.py" />
+    <Content Include="Install\Lib\email\errors.py" />
+    <Content Include="Install\Lib\email\feedparser.py" />
+    <Content Include="Install\Lib\email\generator.py" />
+    <Content Include="Install\Lib\email\header.py" />
+    <Content Include="Install\Lib\email\iterators.py" />
+    <Content Include="Install\Lib\email\message.py" />
+    <Content Include="Install\Lib\email\mime\application.py" />
+    <Content Include="Install\Lib\email\mime\audio.py" />
+    <Content Include="Install\Lib\email\mime\base.py" />
+    <Content Include="Install\Lib\email\mime\image.py" />
+    <Content Include="Install\Lib\email\mime\message.py" />
+    <Content Include="Install\Lib\email\mime\multipart.py" />
+    <Content Include="Install\Lib\email\mime\nonmultipart.py" />
+    <Content Include="Install\Lib\email\mime\text.py" />
+    <Content Include="Install\Lib\email\mime\__init__.py" />
+    <Content Include="Install\Lib\email\parser.py" />
+    <Content Include="Install\Lib\email\quoprimime.py" />
+    <Content Include="Install\Lib\email\utils.py" />
+    <Content Include="Install\Lib\email\_parseaddr.py" />
+    <Content Include="Install\Lib\email\__init__.py" />
+    <Content Include="Install\Lib\encodings\aliases.py" />
+    <Content Include="Install\Lib\encodings\ascii.py" />
+    <Content Include="Install\Lib\encodings\base64_codec.py" />
+    <Content Include="Install\Lib\encodings\bz2_codec.py" />
+    <Content Include="Install\Lib\encodings\charmap.py" />
+    <Content Include="Install\Lib\encodings\cp037.py" />
+    <Content Include="Install\Lib\encodings\cp1006.py" />
+    <Content Include="Install\Lib\encodings\cp1026.py" />
+    <Content Include="Install\Lib\encodings\cp1140.py" />
+    <Content Include="Install\Lib\encodings\cp1250.py" />
+    <Content Include="Install\Lib\encodings\cp1251.py" />
+    <Content Include="Install\Lib\encodings\cp1252.py" />
+    <Content Include="Install\Lib\encodings\cp1253.py" />
+    <Content Include="Install\Lib\encodings\cp1254.py" />
+    <Content Include="Install\Lib\encodings\cp1255.py" />
+    <Content Include="Install\Lib\encodings\cp1256.py" />
+    <Content Include="Install\Lib\encodings\cp1257.py" />
+    <Content Include="Install\Lib\encodings\cp1258.py" />
+    <Content Include="Install\Lib\encodings\cp424.py" />
+    <Content Include="Install\Lib\encodings\cp437.py" />
+    <Content Include="Install\Lib\encodings\cp500.py" />
+    <Content Include="Install\Lib\encodings\cp720.py" />
+    <Content Include="Install\Lib\encodings\cp737.py" />
+    <Content Include="Install\Lib\encodings\cp775.py" />
+    <Content Include="Install\Lib\encodings\cp850.py" />
+    <Content Include="Install\Lib\encodings\cp852.py" />
+    <Content Include="Install\Lib\encodings\cp855.py" />
+    <Content Include="Install\Lib\encodings\cp856.py" />
+    <Content Include="Install\Lib\encodings\cp857.py" />
+    <Content Include="Install\Lib\encodings\cp858.py" />
+    <Content Include="Install\Lib\encodings\cp860.py" />
+    <Content Include="Install\Lib\encodings\cp861.py" />
+    <Content Include="Install\Lib\encodings\cp862.py" />
+    <Content Include="Install\Lib\encodings\cp863.py" />
+    <Content Include="Install\Lib\encodings\cp864.py" />
+    <Content Include="Install\Lib\encodings\cp865.py" />
+    <Content Include="Install\Lib\encodings\cp866.py" />
+    <Content Include="Install\Lib\encodings\cp869.py" />
+    <Content Include="Install\Lib\encodings\cp874.py" />
+    <Content Include="Install\Lib\encodings\cp875.py" />
+    <Content Include="Install\Lib\encodings\hex_codec.py" />
+    <Content Include="Install\Lib\encodings\hp_roman8.py" />
+    <Content Include="Install\Lib\encodings\idna.py" />
+    <Content Include="Install\Lib\encodings\iso8859_1.py" />
+    <Content Include="Install\Lib\encodings\iso8859_10.py" />
+    <Content Include="Install\Lib\encodings\iso8859_11.py" />
+    <Content Include="Install\Lib\encodings\iso8859_13.py" />
+    <Content Include="Install\Lib\encodings\iso8859_14.py" />
+    <Content Include="Install\Lib\encodings\iso8859_15.py" />
+    <Content Include="Install\Lib\encodings\iso8859_16.py" />
+    <Content Include="Install\Lib\encodings\iso8859_2.py" />
+    <Content Include="Install\Lib\encodings\iso8859_3.py" />
+    <Content Include="Install\Lib\encodings\iso8859_4.py" />
+    <Content Include="Install\Lib\encodings\iso8859_5.py" />
+    <Content Include="Install\Lib\encodings\iso8859_6.py" />
+    <Content Include="Install\Lib\encodings\iso8859_7.py" />
+    <Content Include="Install\Lib\encodings\iso8859_8.py" />
+    <Content Include="Install\Lib\encodings\iso8859_9.py" />
+    <Content Include="Install\Lib\encodings\koi8_r.py" />
+    <Content Include="Install\Lib\encodings\koi8_u.py" />
+    <Content Include="Install\Lib\encodings\latin_1.py" />
+    <Content Include="Install\Lib\encodings\mac_arabic.py" />
+    <Content Include="Install\Lib\encodings\mac_centeuro.py" />
+    <Content Include="Install\Lib\encodings\mac_croatian.py" />
+    <Content Include="Install\Lib\encodings\mac_cyrillic.py" />
+    <Content Include="Install\Lib\encodings\mac_farsi.py" />
+    <Content Include="Install\Lib\encodings\mac_greek.py" />
+    <Content Include="Install\Lib\encodings\mac_iceland.py" />
+    <Content Include="Install\Lib\encodings\mac_latin2.py" />
+    <Content Include="Install\Lib\encodings\mac_roman.py" />
+    <Content Include="Install\Lib\encodings\mac_romanian.py" />
+    <Content Include="Install\Lib\encodings\mac_turkish.py" />
+    <Content Include="Install\Lib\encodings\mbcs.py" />
+    <Content Include="Install\Lib\encodings\palmos.py" />
+    <Content Include="Install\Lib\encodings\ptcp154.py" />
+    <Content Include="Install\Lib\encodings\punycode.py" />
+    <Content Include="Install\Lib\encodings\quopri_codec.py" />
+    <Content Include="Install\Lib\encodings\raw_unicode_escape.py" />
+    <Content Include="Install\Lib\encodings\rot_13.py" />
+    <Content Include="Install\Lib\encodings\string_escape.py" />
+    <Content Include="Install\Lib\encodings\tis_620.py" />
+    <Content Include="Install\Lib\encodings\undefined.py" />
+    <Content Include="Install\Lib\encodings\unicode_escape.py" />
+    <Content Include="Install\Lib\encodings\unicode_internal.py" />
+    <Content Include="Install\Lib\encodings\utf_16.py" />
+    <Content Include="Install\Lib\encodings\utf_16_be.py" />
+    <Content Include="Install\Lib\encodings\utf_16_le.py" />
+    <Content Include="Install\Lib\encodings\utf_32.py" />
+    <Content Include="Install\Lib\encodings\utf_32_be.py" />
+    <Content Include="Install\Lib\encodings\utf_32_le.py" />
+    <Content Include="Install\Lib\encodings\utf_7.py" />
+    <Content Include="Install\Lib\encodings\utf_8.py" />
+    <Content Include="Install\Lib\encodings\utf_8_sig.py" />
+    <Content Include="Install\Lib\encodings\uu_codec.py" />
+    <Content Include="Install\Lib\encodings\zlib_codec.py" />
+    <Content Include="Install\Lib\encodings\__init__.py" />
+    <Content Include="Install\Lib\ensurepip\_uninstall.py" />
+    <Content Include="Install\Lib\ensurepip\__init__.py" />
+    <Content Include="Install\Lib\ensurepip\__main__.py" />
+    <Content Include="Install\Lib\filecmp.py" />
+    <Content Include="Install\Lib\fileinput.py" />
+    <Content Include="Install\Lib\fnmatch.py" />
+    <Content Include="Install\Lib\formatter.py" />
+    <Content Include="Install\Lib\fpformat.py" />
+    <Content Include="Install\Lib\fractions.py" />
+    <Content Include="Install\Lib\ftplib.py" />
+    <Content Include="Install\Lib\functools.py" />
+    <Content Include="Install\Lib\genericpath.py" />
+    <Content Include="Install\Lib\getopt.py" />
+    <Content Include="Install\Lib\getpass.py" />
+    <Content Include="Install\Lib\gettext.py" />
+    <Content Include="Install\Lib\glob.py" />
+    <Content Include="Install\Lib\gzip.py" />
+    <Content Include="Install\Lib\hashlib.py" />
+    <Content Include="Install\Lib\heapq.py" />
+    <Content Include="Install\Lib\hmac.py" />
+    <Content Include="Install\Lib\htmlentitydefs.py" />
+    <Content Include="Install\Lib\htmllib.py" />
+    <Content Include="Install\Lib\HTMLParser.py" />
+    <Content Include="Install\Lib\httplib.py" />
+    <Content Include="Install\Lib\ihooks.py" />
+    <Content Include="Install\Lib\imaplib.py" />
+    <Content Include="Install\Lib\imghdr.py" />
+    <Content Include="Install\Lib\importlib\__init__.py" />
+    <Content Include="Install\Lib\imputil.py" />
+    <Content Include="Install\Lib\inspect.py" />
+    <Content Include="Install\Lib\io.py" />
+    <Content Include="Install\Lib\json\decoder.py" />
+    <Content Include="Install\Lib\json\encoder.py" />
+    <Content Include="Install\Lib\json\scanner.py" />
+    <Content Include="Install\Lib\json\tool.py" />
+    <Content Include="Install\Lib\json\__init__.py" />
+    <Content Include="Install\Lib\keyword.py" />
+    <Content Include="Install\Lib\lib2to3\btm_matcher.py" />
+    <Content Include="Install\Lib\lib2to3\btm_utils.py" />
+    <Content Include="Install\Lib\lib2to3\fixer_base.py" />
+    <Content Include="Install\Lib\lib2to3\fixer_util.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_apply.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_asserts.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_basestring.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_buffer.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_callable.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_dict.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_except.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_exec.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_execfile.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_exitfunc.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_filter.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_funcattrs.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_future.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_getcwdu.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_has_key.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_idioms.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_import.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_imports.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_imports2.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_input.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_intern.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_isinstance.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_itertools.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_itertools_imports.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_long.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_map.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_metaclass.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_methodattrs.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_ne.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_next.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_nonzero.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_numliterals.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_operator.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_paren.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_print.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_raise.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_raw_input.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_reduce.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_renames.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_repr.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_set_literal.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_standarderror.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_sys_exc.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_throw.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_tuple_params.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_types.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_unicode.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_urllib.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_ws_comma.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_xrange.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_xreadlines.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\fix_zip.py" />
+    <Content Include="Install\Lib\lib2to3\fixes\__init__.py" />
+    <Content Include="Install\Lib\lib2to3\main.py" />
+    <Content Include="Install\Lib\lib2to3\patcomp.py" />
+    <Content Include="Install\Lib\lib2to3\pgen2\conv.py" />
+    <Content Include="Install\Lib\lib2to3\pgen2\driver.py" />
+    <Content Include="Install\Lib\lib2to3\pgen2\grammar.py" />
+    <Content Include="Install\Lib\lib2to3\pgen2\literals.py" />
+    <Content Include="Install\Lib\lib2to3\pgen2\parse.py" />
+    <Content Include="Install\Lib\lib2to3\pgen2\pgen.py" />
+    <Content Include="Install\Lib\lib2to3\pgen2\token.py" />
+    <Content Include="Install\Lib\lib2to3\pgen2\tokenize.py" />
+    <Content Include="Install\Lib\lib2to3\pgen2\__init__.py" />
+    <Content Include="Install\Lib\lib2to3\pygram.py" />
+    <Content Include="Install\Lib\lib2to3\pytree.py" />
+    <Content Include="Install\Lib\lib2to3\refactor.py" />
+    <Content Include="Install\Lib\lib2to3\__init__.py" />
+    <Content Include="Install\Lib\lib2to3\__main__.py" />
+    <Content Include="Install\Lib\linecache.py" />
+    <Content Include="Install\Lib\locale.py" />
+    <Content Include="Install\Lib\logging\config.py" />
+    <Content Include="Install\Lib\logging\handlers.py" />
+    <Content Include="Install\Lib\logging\__init__.py" />
+    <Content Include="Install\Lib\macpath.py" />
+    <Content Include="Install\Lib\macurl2path.py" />
+    <Content Include="Install\Lib\mailbox.py" />
+    <Content Include="Install\Lib\mailcap.py" />
+    <Content Include="Install\Lib\markupbase.py" />
+    <Content Include="Install\Lib\md5.py" />
+    <Content Include="Install\Lib\mhlib.py" />
+    <Content Include="Install\Lib\mimetools.py" />
+    <Content Include="Install\Lib\mimetypes.py" />
+    <Content Include="Install\Lib\MimeWriter.py" />
+    <Content Include="Install\Lib\mimify.py" />
+    <Content Include="Install\Lib\modulefinder.py" />
+    <Content Include="Install\Lib\multifile.py" />
+    <Content Include="Install\Lib\multiprocessing\connection.py" />
+    <Content Include="Install\Lib\multiprocessing\dummy\connection.py" />
+    <Content Include="Install\Lib\multiprocessing\dummy\__init__.py" />
+    <Content Include="Install\Lib\multiprocessing\forking.py" />
+    <Content Include="Install\Lib\multiprocessing\heap.py" />
+    <Content Include="Install\Lib\multiprocessing\managers.py" />
+    <Content Include="Install\Lib\multiprocessing\pool.py" />
+    <Content Include="Install\Lib\multiprocessing\process.py" />
+    <Content Include="Install\Lib\multiprocessing\queues.py" />
+    <Content Include="Install\Lib\multiprocessing\reduction.py" />
+    <Content Include="Install\Lib\multiprocessing\sharedctypes.py" />
+    <Content Include="Install\Lib\multiprocessing\synchronize.py" />
+    <Content Include="Install\Lib\multiprocessing\util.py" />
+    <Content Include="Install\Lib\multiprocessing\__init__.py" />
+    <Content Include="Install\Lib\mutex.py" />
+    <Content Include="Install\Lib\netrc.py" />
+    <Content Include="Install\Lib\new.py" />
+    <Content Include="Install\Lib\nntplib.py" />
+    <Content Include="Install\Lib\ntpath.py" />
+    <Content Include="Install\Lib\nturl2path.py" />
+    <Content Include="Install\Lib\numbers.py" />
+    <Content Include="Install\Lib\opcode.py" />
+    <Content Include="Install\Lib\optparse.py" />
+    <Content Include="Install\Lib\os.py" />
+    <Content Include="Install\Lib\os2emxpath.py" />
+    <Content Include="Install\Lib\pdb.py" />
+    <Content Include="Install\Lib\pickle.py" />
+    <Content Include="Install\Lib\pickletools.py" />
+    <Content Include="Install\Lib\pipes.py" />
+    <Content Include="Install\Lib\pkgutil.py" />
+    <Content Include="Install\Lib\platform.py" />
+    <Content Include="Install\Lib\plistlib.py" />
+    <Content Include="Install\Lib\popen2.py" />
+    <Content Include="Install\Lib\poplib.py" />
+    <Content Include="Install\Lib\posixfile.py" />
+    <Content Include="Install\Lib\posixpath.py" />
+    <Content Include="Install\Lib\pprint.py" />
+    <Content Include="Install\Lib\profile.py" />
+    <Content Include="Install\Lib\pstats.py" />
+    <Content Include="Install\Lib\pyclbr.py" />
+    <Content Include="Install\Lib\pydoc.py" />
+    <Content Include="Install\Lib\pydoc_data\topics.py" />
+    <Content Include="Install\Lib\pydoc_data\__init__.py" />
+    <Content Include="Install\Lib\py_compile.py" />
+    <Content Include="Install\Lib\Queue.py" />
+    <Content Include="Install\Lib\quopri.py" />
+    <Content Include="Install\Lib\random.py" />
+    <Content Include="Install\Lib\repr.py" />
+    <Content Include="Install\Lib\rexec.py" />
+    <Content Include="Install\Lib\rfc822.py" />
+    <Content Include="Install\Lib\rlcompleter.py" />
+    <Content Include="Install\Lib\robotparser.py" />
+    <Content Include="Install\Lib\runpy.py" />
+    <Content Include="Install\Lib\sched.py" />
+    <Content Include="Install\Lib\sets.py" />
+    <Content Include="Install\Lib\sgmllib.py" />
+    <Content Include="Install\Lib\sha.py" />
+    <Content Include="Install\Lib\shelve.py" />
+    <Content Include="Install\Lib\shlex.py" />
+    <Content Include="Install\Lib\shutil.py" />
+    <Content Include="Install\Lib\SimpleHTTPServer.py" />
+    <Content Include="Install\Lib\SimpleXMLRPCServer.py" />
+    <Content Include="Install\Lib\site-packages\README.txt" />
+    <Content Include="Install\Lib\site.py" />
+    <Content Include="Install\Lib\smtpd.py" />
+    <Content Include="Install\Lib\smtplib.py" />
+    <Content Include="Install\Lib\sndhdr.py" />
+    <Content Include="Install\Lib\SocketServer.py" />
+    <Content Include="Install\Lib\sqlite3\dbapi2.py" />
+    <Content Include="Install\Lib\sqlite3\dump.py" />
+    <Content Include="Install\Lib\sqlite3\__init__.py" />
+    <Content Include="Install\Lib\sre_compile.py" />
+    <Content Include="Install\Lib\sre_constants.py" />
+    <Content Include="Install\Lib\sre_parse.py" />
+    <Content Include="Install\Lib\ssl.py" />
+    <Content Include="Install\Lib\stat.py" />
+    <Content Include="Install\Lib\statvfs.py" />
+    <Content Include="Install\Lib\string.py" />
+    <Content Include="Install\Lib\StringIO.py" />
+    <Content Include="Install\Lib\stringold.py" />
+    <Content Include="Install\Lib\stringprep.py" />
+    <Content Include="Install\Lib\struct.py" />
+    <Content Include="Install\Lib\subprocess.py" />
+    <Content Include="Install\Lib\sunau.py" />
+    <Content Include="Install\Lib\sunaudio.py" />
+    <Content Include="Install\Lib\symbol.py" />
+    <Content Include="Install\Lib\sysconfig.py" />
+    <Content Include="Install\Lib\tabnanny.py" />
+    <Content Include="Install\Lib\tarfile.py" />
+    <Content Include="Install\Lib\telnetlib.py" />
+    <Content Include="Install\Lib\tempfile.py" />
+    <Content Include="Install\Lib\textwrap.py" />
+    <Content Include="Install\Lib\this.py" />
+    <Content Include="Install\Lib\threading.py" />
+    <Content Include="Install\Lib\timeit.py" />
+    <Content Include="Install\Lib\toaiff.py" />
+    <Content Include="Install\Lib\token.py" />
+    <Content Include="Install\Lib\tokenize.py" />
+    <Content Include="Install\Lib\trace.py" />
+    <Content Include="Install\Lib\traceback.py" />
+    <Content Include="Install\Lib\types.py" />
+    <Content Include="Install\Lib\unittest\case.py" />
+    <Content Include="Install\Lib\unittest\loader.py" />
+    <Content Include="Install\Lib\unittest\main.py" />
+    <Content Include="Install\Lib\unittest\result.py" />
+    <Content Include="Install\Lib\unittest\runner.py" />
+    <Content Include="Install\Lib\unittest\signals.py" />
+    <Content Include="Install\Lib\unittest\suite.py" />
+    <Content Include="Install\Lib\unittest\util.py" />
+    <Content Include="Install\Lib\unittest\__init__.py" />
+    <Content Include="Install\Lib\unittest\__main__.py" />
+    <Content Include="Install\Lib\urllib.py" />
+    <Content Include="Install\Lib\urllib2.py" />
+    <Content Include="Install\Lib\urlparse.py" />
+    <Content Include="Install\Lib\user.py" />
+    <Content Include="Install\Lib\UserDict.py" />
+    <Content Include="Install\Lib\UserList.py" />
+    <Content Include="Install\Lib\UserString.py" />
+    <Content Include="Install\Lib\uu.py" />
+    <Content Include="Install\Lib\uuid.py" />
+    <Content Include="Install\Lib\warnings.py" />
+    <Content Include="Install\Lib\wave.py" />
+    <Content Include="Install\Lib\weakref.py" />
+    <Content Include="Install\Lib\webbrowser.py" />
+    <Content Include="Install\Lib\whichdb.py" />
+    <Content Include="Install\Lib\wsgiref\handlers.py" />
+    <Content Include="Install\Lib\wsgiref\headers.py" />
+    <Content Include="Install\Lib\wsgiref\simple_server.py" />
+    <Content Include="Install\Lib\wsgiref\util.py" />
+    <Content Include="Install\Lib\wsgiref\validate.py" />
+    <Content Include="Install\Lib\wsgiref\__init__.py" />
+    <Content Include="Install\Lib\xdrlib.py" />
+    <Content Include="Install\Lib\xmllib.py" />
+    <Content Include="Install\Lib\xmlrpclib.py" />
+    <Content Include="Install\Lib\xml\dom\domreg.py" />
+    <Content Include="Install\Lib\xml\dom\minicompat.py" />
+    <Content Include="Install\Lib\xml\dom\minidom.py" />
+    <Content Include="Install\Lib\xml\dom\NodeFilter.py" />
+    <Content Include="Install\Lib\xml\dom\pulldom.py" />
+    <Content Include="Install\Lib\xml\dom\xmlbuilder.py" />
+    <Content Include="Install\Lib\xml\dom\__init__.py" />
+    <Content Include="Install\Lib\xml\etree\ElementInclude.py" />
+    <Content Include="Install\Lib\xml\etree\ElementPath.py" />
+    <Content Include="Install\Lib\xml\etree\ElementTree.py" />
+    <Content Include="Install\Lib\xml\etree\SimpleXMLTreeBuilder.py" />
+    <Content Include="Install\Lib\xml\etree\__init__.py" />
+    <Content Include="Install\Lib\xml\parsers\__init__.py" />
+    <Content Include="Install\Lib\xml\sax\handler.py" />
+    <Content Include="Install\Lib\xml\sax\saxutils.py" />
+    <Content Include="Install\Lib\xml\sax\xmlreader.py" />
+    <Content Include="Install\Lib\xml\sax\_exceptions.py" />
+    <Content Include="Install\Lib\xml\sax\__init__.py" />
+    <Content Include="Install\Lib\xml\__init__.py" />
+    <Content Include="Install\Lib\zipfile.py" />
+    <Content Include="Install\Lib\_abcoll.py" />
+    <Content Include="Install\Lib\_LWPCookieJar.py" />
+    <Content Include="Install\Lib\_MozillaCookieJar.py" />
+    <Content Include="Install\Lib\_osx_support.py" />
+    <Content Include="Install\Lib\_pyio.py" />
+    <Content Include="Install\Lib\_strptime.py" />
+    <Content Include="Install\Lib\_threading_local.py" />
+    <Content Include="Install\Lib\_weakrefset.py" />
+    <Content Include="Install\Lib\__future__.py" />
+    <Content Include="Install\Lib\__phello__.foo.py" />
+    <AddInContent Include="Install\TestIPY.py" />
+    <AddInContent Include="Install\usgs_scripts\linreg_def.py" />
+    <AddInContent Include="Install\usgs_scripts\moveShoreline.py" />
+    <AddInContent Include="Install\usgs_scripts\rateCalcs.py" />
+    <AddInContent Include="Install\usgs_scripts\main.py" />
+    <AddInContent Include="Install\usgs_scripts\alglibnet2.dll" />
+    <AddInContent Include="Install\usgs_scripts\xalglib.py" />
+    <AddInContent Include="Install\usgs_scripts\summaryCalcs.py" />
+    <None Include="Images\question_mark_gray.png" />
+  </ItemGroup>
+  <PropertyGroup>
+    <ZipFileExtension>esriAddIn</ZipFileExtension>
+    <AddInTargetProduct>Desktop</AddInTargetProduct>
+    <AddInTargetVersion>10.4</AddInTargetVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\ESRI\ESRI.ArcGIS.AddIns.targets" Condition="Exists('$(MSBuildExtensionsPath)\ESRI\ESRI.ArcGIS.AddIns.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  -->
+  <Target Name="AfterBuild">
+    <!-- Gives build warning when add-in targets file is not found. -->
+    <Warning Text="Unable to create .esriAddin; missing ESRI ArcGIS Add-in SDK component(s)." Condition="!Exists('$(MSBuildExtensionsPath)\ESRI\ESRI.ArcGIS.AddIns.targets')" />
+  </Target>
+  <ProjectExtensions>
+    <!-- Default ESRI add-in properties -->
+    <ESRIAddInProperties>
+      <Host>ArcMap</Host>
+    </ESRIAddInProperties>
+  </ProjectExtensions>
+</Project>

@@ -1,0 +1,62 @@
+<ESRI.Configuration xmlns="http://schemas.esri.com/Desktop/AddIns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>DSAS v5.0 add-in</Name>
+  <AddInID>{a2b17571-2e57-4082-aba8-3f1ea3129e38}</AddInID>
+  <Description>Digital Shoreline Analysis System</Description>
+  <Version>5.0.20180213.1225</Version>
+  <Image>Resources\aboutDSAS.jpg</Image>
+  <Author>Ayhan Ergul</Author>
+  <Company>Corona Environmental Consulting</Company>
+  <Date>2/13/2018</Date>
+  <Targets>
+    <Target name="Desktop" version="10.4" />
+  </Targets>
+  <AddIn language="CLR" library="DSASAddin.dll" namespace="DSASAddin">
+    <ArcMap>
+      <Commands>
+        <Button id="Amy_Button" class="Amy_Button" caption="Button for Amy to call IronPython code" tip="Button for Amy to call IronPython code" category="DSAS v5.0" image="Images\Tool1.png" />
+        <Button id="DSASAddin_AttributeToolbarButton" class="AttributeToolbarButton" caption="Attribute automator" tip="Add fields to selected layers" category="DSAS v5.0" image="Images\attribute_button.png" />
+        <Button id="DSASAddin_CastButton" class="CastButton" caption="Cast transects" tip="Cast transects and select smoothing distance" category="DSAS v5.0" image="Images\castnormal.bmp" />
+        <Button id="DSASAddin_DefaultsButton" class="DefaultsButton" caption="Default parameters" tip="Baseline, shoreline calculation, and metadata settings" category="DSAS v5.0" image="Images\defaults.bmp" />
+        <Button id="DSASAddin_CalculateButton" class="CalculateButton" caption="Calculate rates" tip="Select statistics to calculate" category="DSAS v5.0" image="Images\cog.png" />
+        <Button id="DSASAddin_AboutButton" class="AboutButton" caption="About DSAS" tip="DSAS v5 information and version" category="DSAS v5.0" image="Images\about.bmp" />
+        <Button id="DSASAddin_HelpButton" class="HelpButton" caption="DSAS Help" tip="DSAS v5 user guide" category="DSAS v5.0" image="Images\help.gif" />
+        <Button id="DSASAddin_ClipButton" class="ClipButton" caption="Data visualization" tip="Shoreline change envelope and rates display options" category="DSAS v5.0" image="Images\sce_button.bmp" />
+        <Button id="DSASAddin_ShorelineForecastButton" class="ShorelineForecastButton" caption="Shoreline forecasting" tip="Shoreline forecasting" category="DSAS v5.0" image="Images\crystal_ball.png" />
+        <ComboBox id="DSASAddin_TransectLyrToolCtl" class="TransectLyrToolCtl" caption="Transect layer selection" tip=" Select transect file for use in rate calculation" category="DSAS v5.0" sizeString="WWWWWWWWWWWWWW" itemSizeString="WWWWWWWWWWWWWWWWWWWWW" showCaption="true" />
+      </Commands>
+      <Extensions>
+        <Extension id="DSASAddin_DSASExtension" class="DSASExtension" productName="DSAS v5.0 Extension" showInExtensionDialog="true" autoLoad="true">
+          <Description>Digital Shoreline Analysis System v5.0 Extension</Description>
+        </Extension>
+        <!--
+        <Extension id="DSASAddin_DSASMapDataExtension" class="DSASMapDataExtension" productName="" showInExtensionDialog="false" autoLoad="true">
+          <Description>DSAS Helper Extension</Description>
+        </Extension>
+        -->
+      </Extensions>
+      <Editor>
+        <Extensions>
+          <Extension id="DSASAddin_DSASEditorExtension" class="TransectAutoFix" />
+        </Extensions>
+      </Editor>
+      <Toolbars>
+        <Toolbar id="DSASAddin_DSASToolbar" caption="DSAS v5.0 Toolbar">
+          <Items>
+            <!--
+            <Button refID="Amy_Button"/>
+            -->
+            <Button refID="DSASAddin_AttributeToolbarButton"/>
+            <Button refID="DSASAddin_DefaultsButton"/>
+            <Button refID="DSASAddin_CastButton"/>
+            <ComboBox refID="DSASAddin_TransectLyrToolCtl"/>
+            <Button refID="DSASAddin_CalculateButton"/>
+            <Button refID="DSASAddin_ClipButton"/>
+            <Button refID="DSASAddin_ShorelineForecastButton"/>
+            <Button refID="DSASAddin_HelpButton"/>
+            <Button refID="DSASAddin_AboutButton"/>
+          </Items>
+        </Toolbar>
+      </Toolbars>
+    </ArcMap>
+  </AddIn>
+</ESRI.Configuration>

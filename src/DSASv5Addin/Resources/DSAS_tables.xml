@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<DSAS>
+	<!--
+
+	FIELD type(s)
+
+	esriFieldTypeSmallInteger 0 
+	esriFieldTypeInteger	1 
+	esriFieldTypeSingle	2 
+	esriFieldTypeDouble	3 
+	esriFieldTypeString	4 
+	esriFieldTypeDate	5 
+	esriFieldTypeOID	6 
+	esriFieldTypeGeometry	7 
+	esriFieldTypeBlob	8 
+	esriFieldTypeRaster	9 
+	esriFieldTypeGUID	10 
+	esriFieldTypeGlobalID	11 
+
+	FIELD geometry (if applicable)
+
+	public static final int esriGeometryNull	0 
+	public static final int esriGeometryPoint	1 
+	public static final int esriGeometryMultipoint	2 
+	public static final int esriGeometryPolyline	3 
+	public static final int esriGeometryPolygon	4 
+	public static final int esriGeometryEnvelope	5 
+	public static final int esriGeometryPath	6 
+	public static final int esriGeometryAny		7 
+	public static final int esriGeometryMultiPatch	9 
+	public static final int esriGeometryRing	11 
+	public static final int esriGeometryLine	13 
+	public static final int esriGeometryCircularArc	14 
+	public static final int esriGeometryBezier3Curve 15 
+	public static final int esriGeometryEllipticArc	16 
+	public static final int esriGeometryBag		17 
+	public static final int esriGeometryTriangleStrip 18 
+	public static final int esriGeometryTriangleFan 19 
+	public static final int esriGeometryRay		20 
+	public static final int esriGeometrySphere	21 
+	public static final int esriGeometryTriangles	22 
+ 
+
+
+
+		<FIELD name="EPR" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="STATS" />
+		<FIELD name="WLR" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="STATS" />
+		<FIELD name="WR2" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="STATS" />
+		<FIELD name="WSE" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="STATS" />
+		<FIELD name="WCI%" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="STATS" />
+		<FIELD name="LRR" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="STATS" />
+		<FIELD name="LR2" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="STATS" />
+		<FIELD name="LSE" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="STATS" />
+		<FIELD name="LCI%" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="STATS" />
+		<FIELD name="LMS" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="STATS" />
+
+	-->
+	<!--
+	Multiple values separated by commas indicate the allowed values the field property can have when the table is being checked.
+	The first value is the one that will be used when creating the table.
+	The "option" property indicates fields that are controlled by other factors.
+	This file is not intended to be user modifiable. Any changes made by the user may result in errors including some that may not be reported.
+		<FIELD name="ID" alias="" type="Integer" geometry="" length="" precision="" scale="" option="" />
+	-->
+	<TABLE name="baseline">
+		<FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Polyline" length="0" precision="0" scale="0" option="" />
+		<FIELD name="ID" alias="" type="Integer,SmallInteger" geometry="" length="" precision="" scale="" option="" />
+		<FIELD name="Group" alias="" type="Integer,SmallInteger" geometry="" length="8" precision="8" scale="0" option="USER" />
+	</TABLE>
+	<TABLE name="shoreline">
+		<FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Polyline" length="0" precision="0" scale="0" option="" />
+		<FIELD name="DATE" alias="" type="String" geometry="" length="10,22" precision="" scale="" option="USER" />
+    <FIELD name="TYPE" alias="" type="String" geometry="" length="10,22" precision="" scale="" option="USER" />
+    <FIELD name="UNCERTAINTY" alias="" type="SmallInteger,Integer,Single,Double" geometry="" length="" precision="" scale="" option="USER" />
+		<FIELD name="BIAS" alias="" type="Double" geometry="" length="" precision="" scale="" option="BIAS" />
+		<FIELD name="UNCERTAINTY_BIAS" alias="" type="SmallInteger,Integer,Single,Double" geometry="" length="" precision="" scale="" option="BIAS" />
+	</TABLE>
+	<TABLE name="Transect">
+		<FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
+		<FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Polyline" length="0" precision="0" scale="0" option="" />
+		<FIELD name="BaselineID" alias="" type="Integer,SmallInteger" geometry="" length="8" precision="8" scale="0" option="" />
+		<FIELD name="GroupID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+		<FIELD name="TransOrder" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="TransEdit" alias="" type="String" geometry="" length="1" precision="0" scale="0" option="" />
+		<FIELD name="Azimuth" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+  </TABLE>
+  <TABLE name="TransectV4">
+    <FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
+    <FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Polyline" length="0" precision="0" scale="0" option="" />
+    <FIELD name="TransectID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="DELETE" />
+    <FIELD name="BaselineID" alias="" type="Integer,SmallInteger" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="TransOrder" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="ProcTime" alias="" type="String" geometry="" length="30" precision="0" scale="0" option="" />
+    <FIELD name="Autogen" alias="" type="String" geometry="" length="1" precision="0" scale="0" option="" />
+    <FIELD name="StartX" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="" />
+    <FIELD name="StartY" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="" />
+    <FIELD name="EndX" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="" />
+    <FIELD name="EndY" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="" />
+    <FIELD name="Azimuth" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+  </TABLE>
+  <TABLE name="Intersect">
+		<FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
+    <FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Point" length="0" precision="0" scale="0" option="" />
+		<FIELD name="TransectID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+		<FIELD name="BaselineID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+		<FIELD name="ShorelineID" alias="" type="String" geometry="" length="22" precision="0" scale="0" option="" />
+		<FIELD name="Distance" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+		<FIELD name="IntersectX" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+		<FIELD name="IntersectY" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+    <FIELD name="Uncertainty" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+    <FIELD name="Bias_Distance" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="BIAS" />
+    <FIELD name="BIAS" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="BIAS" />
+    <FIELD name="BIAS_X" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="BIAS" />
+    <FIELD name="BIAS_Y" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="BIAS" />
+    <FIELD name="Bias_Uncertainty" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="BIAS" />
+  </TABLE>
+  <TABLE name="Rates">
+    <FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
+    <FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Polyline" length="0" precision="0" scale="0" option="" />
+		<FIELD name="TransectID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+		<FIELD name="BaselineID" alias="" type="Integer,SmallInteger" geometry="" length="8" precision="8" scale="0" option="" />
+		<FIELD name="GroupID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+		<FIELD name="TransOrder" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="Azimuth" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+    <FIELD name="ShrCount" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="TCD" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+  </TABLE>
+  <TABLE name="ForecastableRates">
+    <FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
+    <FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Polyline" length="0" precision="0" scale="0" option="" />
+    <FIELD name="TransectID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="BaselineID" alias="" type="Integer,SmallInteger" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="GroupID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="TransOrder" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="Azimuth" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+    <FIELD name="ShrCount" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="TCD" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+    <FIELD name="LRR" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+    <FIELD name="LCI%" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+    <FIELD name="LSE" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+  </TABLE>
+  <TABLE name="Forecast">
+    <FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
+    <FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Polyline" length="0" precision="0" scale="0" option="" />
+    <FIELD name="ForecastPeriod" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="ForecastYear" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+  </TABLE>
+  <TABLE name="ForecastUncy">
+    <FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
+    <FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Polygon" length="0" precision="0" scale="0" option="" />
+    <FIELD name="ForecastPeriod" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="ForecastYear" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+  </TABLE>
+  <TABLE name="record">
+    <FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
+    <FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Polyline" length="0" precision="0" scale="0" option="" />
+  </TABLE>
+  <TABLE name="Distance">
+		<FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
+		<FIELD name="TransectID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+		<FIELD name="BaselineID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+		<FIELD name="ShorelineID" alias="" type="String" geometry="" length="1200" precision="0" scale="0" option="" />
+		<FIELD name="SCE" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+		<FIELD name="SCE_+-" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+		<FIELD name="NSM" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+		<FIELD name="NSM_+-" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+	</TABLE>
+	<TABLE name="Bias">
+		<FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
+		<FIELD name="TransectID" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+		<FIELD name="B_EPR" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+		<FIELD name="B_WLR" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="" />
+		<FIELD name="B_WR2" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="" />
+		<FIELD name="B_WSE" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="" />
+		<FIELD name="B_WCI%" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="" />
+		<FIELD name="B_LRR" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+		<FIELD name="B_LR2" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="" />
+		<FIELD name="B_LSE" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="" />
+		<FIELD name="B_LCI%" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="" />
+		<FIELD name="B_LMS" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+		<FIELD name="BP_EPR" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="UNC" />
+		<FIELD name="BP_WLR" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="UNC" />
+		<FIELD name="BP_WR2" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="UNC" />
+		<FIELD name="BP_WSE" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="UNC" />
+		<FIELD name="BP_WCI%" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="UNC" />
+		<FIELD name="BP_LRR" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="UNC" />
+		<FIELD name="BP_LR2" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="UNC" />
+		<FIELD name="BP_LSE" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="UNC" />
+		<FIELD name="BP_LCI%" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="UNC" />
+		<FIELD name="BP_LMS" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="UNC" />
+		<FIELD name="BM_EPR" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="UNC" />
+		<FIELD name="BM_WLR" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="UNC" />
+		<FIELD name="BM_WR2" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="UNC" />
+		<FIELD name="BM_WSE" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="UNC" />
+		<FIELD name="BM_WCI%" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="UNC" />
+		<FIELD name="BM_LRR" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="UNC" />
+		<FIELD name="BM_LR2" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="UNC" />
+		<FIELD name="BM_LSE" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="UNC" />
+		<FIELD name="BM_LCI%" alias="" type="Double" geometry="" length="0" precision="20" scale="10" option="UNC" />
+		<FIELD name="BM_LMS" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="UNC" />
+	</TABLE>
+	<TABLE name="BiasInters">
+		<FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
+		<FIELD name="TransectID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+		<FIELD name="ShorelineID" alias="" type="String" geometry="" length="255" precision="0" scale="0" option="" />
+		<FIELD name="DistBias" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+		<FIELD name="DistBiasP" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="UNC" />
+		<FIELD name="DistBiasM" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="UNC" />
+	</TABLE>
+</DSAS>
