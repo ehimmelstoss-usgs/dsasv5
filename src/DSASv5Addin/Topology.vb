@@ -312,7 +312,7 @@ Public Class Topology
             Dim xectLyr As IFeatureLayer = TransectLyrToolCtl.currentTransectLayer
             If xectLyr Is Nothing Then Return
 
-            Dim blIdFldIdx As Integer = GeoDB.baseFldMap("id")
+            Dim blIdFldIdx As Integer = GeoDB.baseFldMap("ID")
             Dim xectBlIdFldIdx As Integer = GeoDB.transFldMap("BaselineId")
 
             'Dim featChanges As IFeatureChanges = DirectCast(feat, IFeatureChanges)
@@ -359,7 +359,7 @@ Public Class Topology
 
         Try
             Dim blGroupFldIdx As Integer = GeoDB.baseFldMap("group")
-            Dim blIdFldIdx As Integer = GeoDB.baseFldMap("id")
+            Dim blIdFldIdx As Integer = GeoDB.baseFldMap("ID")
 
             Dim xectGroupFldIdx As Integer = GeoDB.transFldMap("GroupId")
             Dim xectBlIdFldIdx As Integer = GeoDB.transFldMap("BaselineId")
@@ -410,7 +410,7 @@ Public Class Topology
 
     Private Shared Sub copyBaselineAttrs2Xect(ByVal bl As IFeature, ByVal xect As IFeature)
         Dim blGroupFldIdx As Integer = GeoDB.baseFldMap("group")
-        Dim blIdFldIdx As Integer = GeoDB.baseFldMap("id")
+        Dim blIdFldIdx As Integer = GeoDB.baseFldMap("ID")
 
         Dim xectGroupFldIdx As Integer = GeoDB.transFldMap("GroupId")
         Dim xectBlIdFldIdx As Integer = GeoDB.transFldMap("BaselineId")
@@ -469,7 +469,7 @@ Public Class Topology
                     'We got called for split
                     Dim createdFeat As IFeature = createdObjs(0)
                     'First find the max id for bl
-                    createdFeat.Value(GeoDB.baseFldMap("id")) = getFldExtreme(feat.Class, "id") + 1
+                    createdFeat.Value(GeoDB.baseFldMap("ID")) = getFldExtreme(feat.Class, My.Settings.Baseline_ID_Field) + 1
                     'Clear the created objects list before we call IFeature.Store() as it will invoke OnChangeFeature on it.
                     createdObjs.Clear()
                     createdFeat.Store()

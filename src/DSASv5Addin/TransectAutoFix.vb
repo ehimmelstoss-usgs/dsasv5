@@ -246,7 +246,7 @@ Public Class TransectAutoFix
 
     Private Shared Sub copyBaselineAttrs2Xect(ByVal bl As IFeature, ByVal xect As IFeature)
         Dim blGroupFldIdx As Integer = GeoDB.baseFldMap("group")
-        Dim blIdFldIdx As Integer = GeoDB.baseFldMap("id")
+        Dim blIdFldIdx As Integer = GeoDB.baseFldMap("ID")
 
         Dim xectGroupFldIdx As Integer = GeoDB.transFldMap("GroupId")
         Dim xectBlIdFldIdx As Integer = GeoDB.transFldMap("BaselineId")

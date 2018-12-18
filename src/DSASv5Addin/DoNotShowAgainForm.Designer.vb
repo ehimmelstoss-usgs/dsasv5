@@ -22,13 +22,17 @@ Partial Class DoNotShowAgainForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.txtMessage = New System.Windows.Forms.TextBox
-        Me.btnOK = New System.Windows.Forms.Button
-        Me.chkDoNotShowAgain = New System.Windows.Forms.CheckBox
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(DoNotShowAgainForm))
+        Me.txtMessage = New System.Windows.Forms.TextBox()
+        Me.btnOK = New System.Windows.Forms.Button()
+        Me.chkDoNotShowAgain = New System.Windows.Forms.CheckBox()
         Me.SuspendLayout()
         '
         'txtMessage
         '
+        Me.txtMessage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtMessage.Location = New System.Drawing.Point(12, 12)
         Me.txtMessage.Multiline = True
         Me.txtMessage.Name = "txtMessage"
@@ -38,6 +42,7 @@ Partial Class DoNotShowAgainForm
         '
         'btnOK
         '
+        Me.btnOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnOK.Location = New System.Drawing.Point(392, 159)
         Me.btnOK.Name = "btnOK"
         Me.btnOK.Size = New System.Drawing.Size(75, 23)
@@ -47,6 +52,7 @@ Partial Class DoNotShowAgainForm
         '
         'chkDoNotShowAgain
         '
+        Me.chkDoNotShowAgain.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.chkDoNotShowAgain.AutoSize = True
         Me.chkDoNotShowAgain.Location = New System.Drawing.Point(12, 163)
         Me.chkDoNotShowAgain.Name = "chkDoNotShowAgain"
@@ -61,11 +67,10 @@ Partial Class DoNotShowAgainForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(479, 193)
-        Me.ControlBox = False
         Me.Controls.Add(Me.chkDoNotShowAgain)
         Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.txtMessage)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "DoNotShowAgainForm"
         Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent

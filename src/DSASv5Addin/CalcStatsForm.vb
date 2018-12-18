@@ -83,9 +83,8 @@ Public Class CalcStatsForm
 
 
             setStatus("Initializing...")
-            ' Generate data file
-            dataFilename = DSASUtility.makeDataFilename(TransectLyrToolCtl.currentTransectLayerName)
-            Dim result As String = RateCalculation.walkAndCalc(TransectLyrToolCtl.currentTransectLayerName, dataFilename, IIf(Me.chkThreshold.Checked, Me.txtThreshold.Int, -1))
+            Dim ratesLyrName As String = DSASUtility.layernameConvert(TransectLyrToolCtl.currentTransectLayerName, "transect", "rates")
+            Dim result As String = RateCalculation.walkAndCalc(TransectLyrToolCtl.currentTransectLayerName, ratesLyrName, IIf(Me.chkThreshold.Checked, Me.txtThreshold.Int, -1))
             If result <> "" Then
                 setStatus(result)
                 Me.Cursor = Cursors.Default
@@ -96,15 +95,13 @@ Public Class CalcStatsForm
             Dim selectedCalcs As New ArrayList()
 
             For Each item As Stat In Me.chkAdvancedStats.CheckedItems
-                selectedCalcs.Add(item.valueMember + " (" + item.valueMember + ")")
+                selectedCalcs.Add(item.valueMember)
             Next
 
             setStatus("Updating metadata...")
-            Metadata.updateMetadataForCalculateStats(
-            "[" + String.Join(", ", selectedCalcs.ToArray("".GetType)) + "]",
-            IIf(Me.chkThreshold.Checked, Me.txtThreshold.Text, "none"),
-            DSASUtility.makeOutputTablename(dataFilename)
-        )
+            Dim selectedCalcsStr As String = "[" + String.Join(", ", CType(selectedCalcs.ToArray("".GetType), String())) + "]"
+            Metadata.createMetadata(ratesLyrName, "rates", New Dictionary(Of String, String) From {{"selectedCalcs", selectedCalcsStr}})
+            Metadata.createMetadata(DSASUtility.layernameConvert(ratesLyrName, "rates", "intersect"), "intersect", New Dictionary(Of String, String) From {{"selectedCalcs", selectedCalcsStr}})
 
             setStatus("Run Complete.")
 

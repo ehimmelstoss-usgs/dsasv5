@@ -23,12 +23,10 @@ Public Class SCEClipForm
 
     Private Sub initCombobox(ByVal cb As ComboBox, ByVal layerType As String, Optional checkForIntersectLayer As Boolean = False)
         cb.Items.Add("")
-        For Each lyr As IFeatureLayer In MapUtility.featureLayers()
-            If GeoDB.layerIsValid(lyr, layerType, True) Then
-                If GeoDB.geodbIsCurrent(lyr) Then
-                    If Not checkForIntersectLayer OrElse GeoDB.checkIfTableFieldExists(lyr.Name.Replace("_rates_", "_intersect_"), Nothing) Then
-                        cb.Items.Add(lyr.Name)
-                    End If
+        For Each lyr As IFeatureLayer In MapUtility.featureLayers(layerType)
+            If GeoDB.geodbIsCurrent(lyr) Then
+                If Not checkForIntersectLayer OrElse GeoDB.checkIfTableFieldExists(lyr.Name.Replace("_rates_", "_intersect_"), Nothing) Then
+                    cb.Items.Add(lyr.Name)
                 End If
             End If
         Next
@@ -59,7 +57,7 @@ Public Class SCEClipForm
                 MapUtility.AddFeatureClassToMap(fcClipped)
                 ' Make the new layer available for color ramp
                 cbRatesColorRamp.Items.Insert(1, clippedFcName)
-                MsgBox("SCE clipped rates layer '" + clippedFcName + "' has been created and added to your map.")
+                MsgBox("SCE clipped rates layer '" + clippedFcName + "' has been created and added to your map.",, DSAS.MsgBoxTitle)
             Else
                 log(TraceLevel.Error, "Unable to create SCE clipped rates layer.")
             End If

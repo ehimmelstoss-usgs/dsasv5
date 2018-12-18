@@ -23,18 +23,16 @@ Public Class AttributeToolbarForm
     End Sub
 
     Private Sub initializeBaselineLayerList()
-        Dim iLayerList As IEnumerable(Of IFeatureLayer) = MapUtility.featureLayers("baseline", False)
-        For Each layer As IFeatureLayer In iLayerList
-            Me.baselineLayerList.Add(layer)
-            baselineListCtrl.Items.Add(layer.Name)
+        For Each lyr As IFeatureLayer In MapUtility.featureLayers("baseline", False)
+            Me.baselineLayerList.Add(lyr)
+            baselineListCtrl.Items.Add(lyr.Name)
         Next
     End Sub
 
     Private Sub initializeShorelineLayerList()
-        Dim iLayerList As IEnumerable(Of IFeatureLayer) = MapUtility.featureLayers("shoreline", False)
-        For Each layer As IFeatureLayer In iLayerList
-            Me.shorelineLayerList.Add(layer)
-            layerListControl.Items.Add(layer.Name)
+        For Each lyr As IFeatureLayer In MapUtility.featureLayers("shoreline", False)
+            Me.shorelineLayerList.Add(lyr)
+            layerListControl.Items.Add(lyr.Name)
         Next
     End Sub
 
@@ -216,6 +214,10 @@ Public Class AttributeToolbarForm
             editedLayerNames.Add(layer.Name)
         Next
 
+        ' Automatically update project setting for baseline ID field if we just added one
+        If ifAddIdField Then My.Settings.Baseline_ID_Field = idFieldName
+        ' Automatically update project setting for shoreline ID field if we just added one
+        If IfAddDateFieldControl.Checked Then My.Settings.Shoreline_Date_Field = dateFieldNameControl.Text
         Me.unselectLayerNames(editedLayerNames)
         MessageBox.Show("Fields are successfully added.")
     End Sub

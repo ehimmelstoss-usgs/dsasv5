@@ -213,18 +213,6 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
-        Public Property DoNotShowAgainCompleteMetadataSettings() As Boolean
-            Get
-                Return CType(Me("DoNotShowAgainCompleteMetadataSettings"),Boolean)
-            End Get
-            Set
-                Me("DoNotShowAgainCompleteMetadataSettings") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
         Public Property Intersect_Threshold_Enforced() As Boolean
             Get
                 Return CType(Me("Intersect_Threshold_Enforced"),Boolean)
@@ -339,6 +327,54 @@ Namespace My
             End Get
             Set
                 Me("CreateSummaryReport") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("ID")>  _
+        Public Property Baseline_ID_Field() As String
+            Get
+                Return CType(Me("Baseline_ID_Field"),String)
+            End Get
+            Set
+                Me("Baseline_ID_Field") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property ClipTransectsToShorelineExtent() As Boolean
+            Get
+                Return CType(Me("ClipTransectsToShorelineExtent"),Boolean)
+            End Get
+            Set
+                Me("ClipTransectsToShorelineExtent") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property DoNotShowAgainForecastCaveat() As Boolean
+            Get
+                Return CType(Me("DoNotShowAgainForecastCaveat"),Boolean)
+            End Get
+            Set
+                Me("DoNotShowAgainForecastCaveat") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("BOTH")>  _
+        Public Property CastDirection() As String
+            Get
+                Return CType(Me("CastDirection"),String)
+            End Get
+            Set
+                Me("CastDirection") = value
             End Set
         End Property
     End Class

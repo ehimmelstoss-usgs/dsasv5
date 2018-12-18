@@ -41,9 +41,6 @@
     <Setting Name="Baseline_Group_Field" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="DoNotShowAgainCompleteMetadataSettings" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="Intersect_Threshold_Enforced" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -73,6 +70,18 @@
     </Setting>
     <Setting Name="CreateSummaryReport" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Baseline_ID_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ID</Value>
+    </Setting>
+    <Setting Name="ClipTransectsToShorelineExtent" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DoNotShowAgainForecastCaveat" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CastDirection" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BOTH</Value>
     </Setting>
   </Settings>
 </SettingsFile>

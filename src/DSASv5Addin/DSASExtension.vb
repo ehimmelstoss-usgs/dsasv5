@@ -18,7 +18,7 @@ Public Class DSASExtension
         logIntro()
 
         Dim m_documentEvents As IDocumentEvents_Event = DirectCast(My.Document, IDocumentEvents_Event)
-        AddHandler m_documentEvents.NewDocument, AddressOf wireDocumentEvents
+        AddHandler m_documentEvents.NewDocument, AddressOf setupNewDocument
         AddHandler m_documentEvents.OpenDocument, AddressOf wireDocumentEvents
         AddHandler m_documentEvents.MapsChanged, AddressOf wireDocumentEvents
 
@@ -28,6 +28,14 @@ Public Class DSASExtension
 
     End Sub
 
+    Private Sub setupNewDocument()
+        wireDocumentEvents()
+
+        For Each prop As Configuration.SettingsProperty In My.Settings.Properties
+            'Reset hidden warnings
+            If prop.Name.ToLower.StartsWith("donotshowagain") Then My.Settings(prop.Name) = False
+        Next
+    End Sub
 
     Private Sub InitializeLayers(item As Object)
         If DSAS.TransectLyrToolInstance IsNot Nothing Then

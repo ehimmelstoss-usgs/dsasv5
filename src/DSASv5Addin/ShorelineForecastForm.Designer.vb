@@ -177,7 +177,7 @@ Partial Class ShorelineForecastForm
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "ShorelineForecastForm"
-        Me.Text = "Shoreline Forecasting"
+        Me.Text = "BETA Shoreline Forecasting"
         CType(Me.btnForecastTimeHelp, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.btnForecastLayerHelp, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)

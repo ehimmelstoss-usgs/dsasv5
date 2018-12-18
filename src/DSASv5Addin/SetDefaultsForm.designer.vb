@@ -26,6 +26,11 @@ Partial Class SetDefaultsForm
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SetDefaultsForm))
         Me.tabDefaults = New System.Windows.Forms.TabControl()
         Me.tabTransects = New System.Windows.Forms.TabPage()
+        Me.btnHelpXectRelativeToBl = New System.Windows.Forms.PictureBox()
+        Me.gbXectRelativeToBl = New System.Windows.Forms.GroupBox()
+        Me.rbCastOffShore = New System.Windows.Forms.RadioButton()
+        Me.rbCastOnShore = New System.Windows.Forms.RadioButton()
+        Me.rbCastBoth = New System.Windows.Forms.RadioButton()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.helpButtonVisualizeBaselineOrientation = New System.Windows.Forms.PictureBox()
         Me.chkVisualizeBaselineOrientation = New System.Windows.Forms.CheckBox()
@@ -36,9 +41,13 @@ Partial Class SetDefaultsForm
         Me.pbRight1 = New System.Windows.Forms.PictureBox()
         Me.pbLeft1 = New System.Windows.Forms.PictureBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.helpButtonBaselineID = New System.Windows.Forms.PictureBox()
+        Me.cmbBaselineID = New System.Windows.Forms.ComboBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
         Me.lblBaselineSearchDistanceField = New System.Windows.Forms.Label()
         Me.cmbBaselineSearchDistance = New System.Windows.Forms.ComboBox()
-        Me.baselineSearchDistanceHelpBtn = New System.Windows.Forms.PictureBox()
+        Me.helpButtonBaselineSearchDistance = New System.Windows.Forms.PictureBox()
         Me.helpButtonBaselineGroup = New System.Windows.Forms.PictureBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.cmbBaseGroup = New System.Windows.Forms.ComboBox()
@@ -73,8 +82,6 @@ Partial Class SetDefaultsForm
         Me.cmbShorelineFC = New System.Windows.Forms.ComboBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.current = New System.Windows.Forms.ComboBox()
-        Me.Label16 = New System.Windows.Forms.Label()
         Me.GroupBox7 = New System.Windows.Forms.GroupBox()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.cntemail = New System.Windows.Forms.TextBox()
@@ -114,15 +121,21 @@ Partial Class SetDefaultsForm
         Me.radLogExtended = New System.Windows.Forms.RadioButton()
         Me.radLogRegular = New System.Windows.Forms.RadioButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.current = New System.Windows.Forms.ComboBox()
+        Me.Label16 = New System.Windows.Forms.Label()
         Me.tabDefaults.SuspendLayout()
         Me.tabTransects.SuspendLayout()
+        CType(Me.btnHelpXectRelativeToBl, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.gbXectRelativeToBl.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         CType(Me.helpButtonVisualizeBaselineOrientation, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.helpButtonLandDirection, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pbRight1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pbLeft1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
-        CType(Me.baselineSearchDistanceHelpBtn, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.helpButtonBaselineID, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox5.SuspendLayout()
+        CType(Me.helpButtonBaselineSearchDistance, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.helpButtonBaselineGroup, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabShorelineCalc.SuspendLayout()
         Me.grpBias.SuspendLayout()
@@ -146,7 +159,8 @@ Partial Class SetDefaultsForm
         '
         'tabDefaults
         '
-        Me.tabDefaults.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.tabDefaults.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tabDefaults.Controls.Add(Me.tabTransects)
         Me.tabDefaults.Controls.Add(Me.tabShorelineCalc)
@@ -154,20 +168,80 @@ Partial Class SetDefaultsForm
         Me.tabDefaults.Location = New System.Drawing.Point(1, 1)
         Me.tabDefaults.Name = "tabDefaults"
         Me.tabDefaults.SelectedIndex = 0
-        Me.tabDefaults.Size = New System.Drawing.Size(428, 533)
+        Me.tabDefaults.Size = New System.Drawing.Size(428, 567)
         Me.tabDefaults.TabIndex = 0
         '
         'tabTransects
         '
+        Me.tabTransects.Controls.Add(Me.btnHelpXectRelativeToBl)
+        Me.tabTransects.Controls.Add(Me.gbXectRelativeToBl)
         Me.tabTransects.Controls.Add(Me.GroupBox2)
         Me.tabTransects.Controls.Add(Me.GroupBox1)
         Me.tabTransects.Location = New System.Drawing.Point(4, 22)
         Me.tabTransects.Name = "tabTransects"
         Me.tabTransects.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabTransects.Size = New System.Drawing.Size(420, 507)
+        Me.tabTransects.Size = New System.Drawing.Size(420, 541)
         Me.tabTransects.TabIndex = 0
         Me.tabTransects.Text = "Baseline Settings"
         Me.tabTransects.UseVisualStyleBackColor = True
+        '
+        'btnHelpXectRelativeToBl
+        '
+        Me.btnHelpXectRelativeToBl.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.btnHelpXectRelativeToBl.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnHelpXectRelativeToBl.Image = Global.DSASAddin.My.Resources.Resources.question_mark_gray
+        Me.btnHelpXectRelativeToBl.Location = New System.Drawing.Point(113, 471)
+        Me.btnHelpXectRelativeToBl.Name = "btnHelpXectRelativeToBl"
+        Me.btnHelpXectRelativeToBl.Size = New System.Drawing.Size(25, 21)
+        Me.btnHelpXectRelativeToBl.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.btnHelpXectRelativeToBl.TabIndex = 9
+        Me.btnHelpXectRelativeToBl.TabStop = False
+        '
+        'gbXectRelativeToBl
+        '
+        Me.gbXectRelativeToBl.Controls.Add(Me.rbCastOffShore)
+        Me.gbXectRelativeToBl.Controls.Add(Me.rbCastOnShore)
+        Me.gbXectRelativeToBl.Controls.Add(Me.rbCastBoth)
+        Me.gbXectRelativeToBl.Location = New System.Drawing.Point(6, 486)
+        Me.gbXectRelativeToBl.Name = "gbXectRelativeToBl"
+        Me.gbXectRelativeToBl.Size = New System.Drawing.Size(407, 48)
+        Me.gbXectRelativeToBl.TabIndex = 4
+        Me.gbXectRelativeToBl.TabStop = False
+        Me.gbXectRelativeToBl.Text = "Baseline placement"
+        '
+        'rbCastOffShore
+        '
+        Me.rbCastOffShore.AutoSize = True
+        Me.rbCastOffShore.Location = New System.Drawing.Point(333, 22)
+        Me.rbCastOffShore.Name = "rbCastOffShore"
+        Me.rbCastOffShore.Size = New System.Drawing.Size(65, 17)
+        Me.rbCastOffShore.TabIndex = 9
+        Me.rbCastOffShore.TabStop = True
+        Me.rbCastOffShore.Text = "Offshore"
+        Me.rbCastOffShore.UseVisualStyleBackColor = True
+        '
+        'rbCastOnShore
+        '
+        Me.rbCastOnShore.AutoSize = True
+        Me.rbCastOnShore.Location = New System.Drawing.Point(212, 22)
+        Me.rbCastOnShore.Name = "rbCastOnShore"
+        Me.rbCastOnShore.Size = New System.Drawing.Size(65, 17)
+        Me.rbCastOnShore.TabIndex = 8
+        Me.rbCastOnShore.TabStop = True
+        Me.rbCastOnShore.Text = "Onshore"
+        Me.rbCastOnShore.UseVisualStyleBackColor = True
+        '
+        'rbCastBoth
+        '
+        Me.rbCastBoth.AutoSize = True
+        Me.rbCastBoth.Checked = True
+        Me.rbCastBoth.Location = New System.Drawing.Point(10, 22)
+        Me.rbCastBoth.Name = "rbCastBoth"
+        Me.rbCastBoth.Size = New System.Drawing.Size(146, 17)
+        Me.rbCastBoth.TabIndex = 7
+        Me.rbCastBoth.TabStop = True
+        Me.rbCastBoth.Text = "Midshore (or combination)"
+        Me.rbCastBoth.UseVisualStyleBackColor = True
         '
         'GroupBox2
         '
@@ -181,9 +255,9 @@ Partial Class SetDefaultsForm
         Me.GroupBox2.Controls.Add(Me.rad_left)
         Me.GroupBox2.Controls.Add(Me.pbRight1)
         Me.GroupBox2.Controls.Add(Me.pbLeft1)
-        Me.GroupBox2.Location = New System.Drawing.Point(6, 131)
+        Me.GroupBox2.Location = New System.Drawing.Point(6, 176)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(407, 369)
+        Me.GroupBox2.Size = New System.Drawing.Size(407, 295)
         Me.GroupBox2.TabIndex = 3
         Me.GroupBox2.TabStop = False
         '
@@ -262,7 +336,7 @@ Partial Class SetDefaultsForm
         Me.pbRight1.Image = CType(resources.GetObject("pbRight1.Image"), System.Drawing.Image)
         Me.pbRight1.Location = New System.Drawing.Point(209, 84)
         Me.pbRight1.Name = "pbRight1"
-        Me.pbRight1.Size = New System.Drawing.Size(189, 282)
+        Me.pbRight1.Size = New System.Drawing.Size(189, 207)
         Me.pbRight1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.pbRight1.TabIndex = 3
         Me.pbRight1.TabStop = False
@@ -273,7 +347,7 @@ Partial Class SetDefaultsForm
         Me.pbLeft1.Location = New System.Drawing.Point(10, 84)
         Me.pbLeft1.Margin = New System.Windows.Forms.Padding(0)
         Me.pbLeft1.Name = "pbLeft1"
-        Me.pbLeft1.Size = New System.Drawing.Size(189, 282)
+        Me.pbLeft1.Size = New System.Drawing.Size(189, 207)
         Me.pbLeft1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.pbLeft1.TabIndex = 1
         Me.pbLeft1.TabStop = False
@@ -282,28 +356,74 @@ Partial Class SetDefaultsForm
         '
         Me.GroupBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupBox1.Controls.Add(Me.lblBaselineSearchDistanceField)
-        Me.GroupBox1.Controls.Add(Me.cmbBaselineSearchDistance)
-        Me.GroupBox1.Controls.Add(Me.baselineSearchDistanceHelpBtn)
-        Me.GroupBox1.Controls.Add(Me.helpButtonBaselineGroup)
-        Me.GroupBox1.Controls.Add(Me.Label6)
-        Me.GroupBox1.Controls.Add(Me.cmbBaseGroup)
+        Me.GroupBox1.Controls.Add(Me.helpButtonBaselineID)
+        Me.GroupBox1.Controls.Add(Me.cmbBaselineID)
+        Me.GroupBox1.Controls.Add(Me.Label2)
+        Me.GroupBox1.Controls.Add(Me.GroupBox5)
         Me.GroupBox1.Controls.Add(Me.cmbBaselineFC)
         Me.GroupBox1.Controls.Add(Me.Label1)
         Me.GroupBox1.Location = New System.Drawing.Point(7, 6)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(406, 119)
+        Me.GroupBox1.Size = New System.Drawing.Size(406, 171)
         Me.GroupBox1.TabIndex = 2
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Baseline Parameters"
         '
+        'helpButtonBaselineID
+        '
+        Me.helpButtonBaselineID.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.helpButtonBaselineID.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.helpButtonBaselineID.Image = Global.DSASAddin.My.Resources.Resources.question_mark_gray
+        Me.helpButtonBaselineID.Location = New System.Drawing.Point(371, 50)
+        Me.helpButtonBaselineID.Name = "helpButtonBaselineID"
+        Me.helpButtonBaselineID.Size = New System.Drawing.Size(25, 21)
+        Me.helpButtonBaselineID.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.helpButtonBaselineID.TabIndex = 18
+        Me.helpButtonBaselineID.TabStop = False
+        '
+        'cmbBaselineID
+        '
+        Me.cmbBaselineID.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cmbBaselineID.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+        Me.cmbBaselineID.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cmbBaselineID.FormattingEnabled = True
+        Me.cmbBaselineID.Location = New System.Drawing.Point(121, 50)
+        Me.cmbBaselineID.Name = "cmbBaselineID"
+        Me.cmbBaselineID.Size = New System.Drawing.Size(244, 21)
+        Me.cmbBaselineID.TabIndex = 16
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(6, 53)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(86, 13)
+        Me.Label2.TabIndex = 17
+        Me.Label2.Text = "Baseline ID Field"
+        '
+        'GroupBox5
+        '
+        Me.GroupBox5.Controls.Add(Me.lblBaselineSearchDistanceField)
+        Me.GroupBox5.Controls.Add(Me.cmbBaselineSearchDistance)
+        Me.GroupBox5.Controls.Add(Me.helpButtonBaselineSearchDistance)
+        Me.GroupBox5.Controls.Add(Me.helpButtonBaselineGroup)
+        Me.GroupBox5.Controls.Add(Me.Label6)
+        Me.GroupBox5.Controls.Add(Me.cmbBaseGroup)
+        Me.GroupBox5.Location = New System.Drawing.Point(9, 85)
+        Me.GroupBox5.Name = "GroupBox5"
+        Me.GroupBox5.Size = New System.Drawing.Size(389, 78)
+        Me.GroupBox5.TabIndex = 15
+        Me.GroupBox5.TabStop = False
+        Me.GroupBox5.Text = "Optional Parameters"
+        '
         'lblBaselineSearchDistanceField
         '
         Me.lblBaselineSearchDistanceField.AutoSize = True
-        Me.lblBaselineSearchDistanceField.Location = New System.Drawing.Point(6, 85)
+        Me.lblBaselineSearchDistanceField.Location = New System.Drawing.Point(6, 51)
         Me.lblBaselineSearchDistanceField.Name = "lblBaselineSearchDistanceField"
         Me.lblBaselineSearchDistanceField.Size = New System.Drawing.Size(154, 13)
-        Me.lblBaselineSearchDistanceField.TabIndex = 14
+        Me.lblBaselineSearchDistanceField.TabIndex = 20
         Me.lblBaselineSearchDistanceField.Text = "Baseline Search Distance Field"
         '
         'cmbBaselineSearchDistance
@@ -313,42 +433,42 @@ Partial Class SetDefaultsForm
         Me.cmbBaselineSearchDistance.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cmbBaselineSearchDistance.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cmbBaselineSearchDistance.FormattingEnabled = True
-        Me.cmbBaselineSearchDistance.Location = New System.Drawing.Point(171, 82)
+        Me.cmbBaselineSearchDistance.Location = New System.Drawing.Point(171, 48)
         Me.cmbBaselineSearchDistance.Name = "cmbBaselineSearchDistance"
-        Me.cmbBaselineSearchDistance.Size = New System.Drawing.Size(193, 21)
-        Me.cmbBaselineSearchDistance.TabIndex = 13
+        Me.cmbBaselineSearchDistance.Size = New System.Drawing.Size(185, 21)
+        Me.cmbBaselineSearchDistance.TabIndex = 19
         '
-        'baselineSearchDistanceHelpBtn
+        'helpButtonBaselineSearchDistance
         '
-        Me.baselineSearchDistanceHelpBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.baselineSearchDistanceHelpBtn.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.baselineSearchDistanceHelpBtn.Image = Global.DSASAddin.My.Resources.Resources.question_mark_gray
-        Me.baselineSearchDistanceHelpBtn.Location = New System.Drawing.Point(373, 82)
-        Me.baselineSearchDistanceHelpBtn.Name = "baselineSearchDistanceHelpBtn"
-        Me.baselineSearchDistanceHelpBtn.Size = New System.Drawing.Size(25, 21)
-        Me.baselineSearchDistanceHelpBtn.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.baselineSearchDistanceHelpBtn.TabIndex = 12
-        Me.baselineSearchDistanceHelpBtn.TabStop = False
+        Me.helpButtonBaselineSearchDistance.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.helpButtonBaselineSearchDistance.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.helpButtonBaselineSearchDistance.Image = Global.DSASAddin.My.Resources.Resources.question_mark_gray
+        Me.helpButtonBaselineSearchDistance.Location = New System.Drawing.Point(363, 48)
+        Me.helpButtonBaselineSearchDistance.Name = "helpButtonBaselineSearchDistance"
+        Me.helpButtonBaselineSearchDistance.Size = New System.Drawing.Size(25, 21)
+        Me.helpButtonBaselineSearchDistance.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.helpButtonBaselineSearchDistance.TabIndex = 18
+        Me.helpButtonBaselineSearchDistance.TabStop = False
         '
         'helpButtonBaselineGroup
         '
         Me.helpButtonBaselineGroup.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.helpButtonBaselineGroup.Cursor = System.Windows.Forms.Cursors.Hand
         Me.helpButtonBaselineGroup.Image = Global.DSASAddin.My.Resources.Resources.question_mark_gray
-        Me.helpButtonBaselineGroup.Location = New System.Drawing.Point(373, 50)
+        Me.helpButtonBaselineGroup.Location = New System.Drawing.Point(363, 16)
         Me.helpButtonBaselineGroup.Name = "helpButtonBaselineGroup"
         Me.helpButtonBaselineGroup.Size = New System.Drawing.Size(25, 21)
         Me.helpButtonBaselineGroup.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.helpButtonBaselineGroup.TabIndex = 8
+        Me.helpButtonBaselineGroup.TabIndex = 15
         Me.helpButtonBaselineGroup.TabStop = False
         '
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(6, 53)
+        Me.Label6.Location = New System.Drawing.Point(6, 19)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(104, 13)
-        Me.Label6.TabIndex = 9
+        Me.Label6.TabIndex = 17
         Me.Label6.Text = "Baseline Group Field"
         '
         'cmbBaseGroup
@@ -358,10 +478,10 @@ Partial Class SetDefaultsForm
         Me.cmbBaseGroup.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cmbBaseGroup.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cmbBaseGroup.FormattingEnabled = True
-        Me.cmbBaseGroup.Location = New System.Drawing.Point(121, 50)
+        Me.cmbBaseGroup.Location = New System.Drawing.Point(121, 16)
         Me.cmbBaseGroup.Name = "cmbBaseGroup"
-        Me.cmbBaseGroup.Size = New System.Drawing.Size(243, 21)
-        Me.cmbBaseGroup.TabIndex = 8
+        Me.cmbBaseGroup.Size = New System.Drawing.Size(235, 21)
+        Me.cmbBaseGroup.TabIndex = 16
         '
         'cmbBaselineFC
         '
@@ -392,9 +512,9 @@ Partial Class SetDefaultsForm
         Me.tabShorelineCalc.Location = New System.Drawing.Point(4, 22)
         Me.tabShorelineCalc.Name = "tabShorelineCalc"
         Me.tabShorelineCalc.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabShorelineCalc.Size = New System.Drawing.Size(420, 507)
+        Me.tabShorelineCalc.Size = New System.Drawing.Size(420, 541)
         Me.tabShorelineCalc.TabIndex = 1
-        Me.tabShorelineCalc.Text = "Shoreline Calculation Settings"
+        Me.tabShorelineCalc.Text = "Shoreline Settings"
         Me.tabShorelineCalc.UseVisualStyleBackColor = True
         '
         'grpBias
@@ -720,43 +840,16 @@ Partial Class SetDefaultsForm
         '
         'TabPage1
         '
-        Me.TabPage1.Controls.Add(Me.current)
-        Me.TabPage1.Controls.Add(Me.Label16)
         Me.TabPage1.Controls.Add(Me.GroupBox7)
         Me.TabPage1.Controls.Add(Me.GroupBox4)
         Me.TabPage1.Controls.Add(Me.GroupBox3)
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(420, 507)
+        Me.TabPage1.Size = New System.Drawing.Size(420, 541)
         Me.TabPage1.TabIndex = 2
         Me.TabPage1.Text = "Metadata Settings"
         Me.TabPage1.UseVisualStyleBackColor = True
-        '
-        'current
-        '
-        Me.current.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.current.FormattingEnabled = True
-        Me.current.Items.AddRange(New Object() {"ground condition", "publication date"})
-        Me.current.Location = New System.Drawing.Point(149, 364)
-        Me.current.Name = "current"
-        Me.current.Size = New System.Drawing.Size(168, 21)
-        Me.current.TabIndex = 8
-        Me.current.Text = "publication date"
-        Me.current.Visible = False
-        '
-        'Label16
-        '
-        Me.Label16.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(13, 367)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(132, 13)
-        Me.Label16.TabIndex = 7
-        Me.Label16.Text = "What are Data Current to?"
-        Me.Label16.Visible = False
         '
         'GroupBox7
         '
@@ -778,10 +871,10 @@ Partial Class SetDefaultsForm
         Me.GroupBox7.Controls.Add(Me.cntper)
         Me.GroupBox7.Controls.Add(Me.Label20)
         Me.GroupBox7.Controls.Add(Me.cntorg)
-        Me.GroupBox7.Location = New System.Drawing.Point(7, 199)
+        Me.GroupBox7.Location = New System.Drawing.Point(7, 248)
         Me.GroupBox7.Name = "GroupBox7"
         Me.GroupBox7.Size = New System.Drawing.Size(402, 153)
-        Me.GroupBox7.TabIndex = 6
+        Me.GroupBox7.TabIndex = 2
         Me.GroupBox7.TabStop = False
         Me.GroupBox7.Text = "Contact Information"
         '
@@ -803,7 +896,7 @@ Partial Class SetDefaultsForm
         Me.cntemail.Location = New System.Drawing.Point(194, 127)
         Me.cntemail.Name = "cntemail"
         Me.cntemail.Size = New System.Drawing.Size(202, 20)
-        Me.cntemail.TabIndex = 14
+        Me.cntemail.TabIndex = 7
         '
         'Label24
         '
@@ -819,7 +912,7 @@ Partial Class SetDefaultsForm
         Me.cntvoice.Location = New System.Drawing.Point(50, 127)
         Me.cntvoice.Name = "cntvoice"
         Me.cntvoice.Size = New System.Drawing.Size(86, 20)
-        Me.cntvoice.TabIndex = 12
+        Me.cntvoice.TabIndex = 6
         '
         'Label23
         '
@@ -837,7 +930,7 @@ Partial Class SetDefaultsForm
         Me.postal.Location = New System.Drawing.Point(350, 97)
         Me.postal.Name = "postal"
         Me.postal.Size = New System.Drawing.Size(46, 20)
-        Me.postal.TabIndex = 10
+        Me.postal.TabIndex = 5
         '
         'Label22
         '
@@ -855,7 +948,7 @@ Partial Class SetDefaultsForm
         Me.state.Location = New System.Drawing.Point(275, 97)
         Me.state.Name = "state"
         Me.state.Size = New System.Drawing.Size(35, 20)
-        Me.state.TabIndex = 8
+        Me.state.TabIndex = 4
         '
         'Label21
         '
@@ -875,7 +968,7 @@ Partial Class SetDefaultsForm
         Me.city.Location = New System.Drawing.Point(36, 97)
         Me.city.Name = "city"
         Me.city.Size = New System.Drawing.Size(188, 20)
-        Me.city.TabIndex = 6
+        Me.city.TabIndex = 3
         '
         'Label18
         '
@@ -895,7 +988,7 @@ Partial Class SetDefaultsForm
         Me.address.Location = New System.Drawing.Point(78, 71)
         Me.address.Name = "address"
         Me.address.Size = New System.Drawing.Size(318, 20)
-        Me.address.TabIndex = 4
+        Me.address.TabIndex = 2
         '
         'Label19
         '
@@ -915,7 +1008,7 @@ Partial Class SetDefaultsForm
         Me.cntper.Location = New System.Drawing.Point(78, 45)
         Me.cntper.Name = "cntper"
         Me.cntper.Size = New System.Drawing.Size(318, 20)
-        Me.cntper.TabIndex = 2
+        Me.cntper.TabIndex = 1
         '
         'Label20
         '
@@ -941,6 +1034,8 @@ Partial Class SetDefaultsForm
         '
         Me.GroupBox4.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GroupBox4.Controls.Add(Me.current)
+        Me.GroupBox4.Controls.Add(Me.Label16)
         Me.GroupBox4.Controls.Add(Me.progress)
         Me.GroupBox4.Controls.Add(Me.Label17)
         Me.GroupBox4.Controls.Add(Me.status_update)
@@ -949,8 +1044,8 @@ Partial Class SetDefaultsForm
         Me.GroupBox4.Controls.Add(Me.Label15)
         Me.GroupBox4.Location = New System.Drawing.Point(7, 119)
         Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Size = New System.Drawing.Size(402, 74)
-        Me.GroupBox4.TabIndex = 6
+        Me.GroupBox4.Size = New System.Drawing.Size(402, 114)
+        Me.GroupBox4.TabIndex = 1
         Me.GroupBox4.TabStop = False
         Me.GroupBox4.Text = "Data Update and Access Information"
         '
@@ -962,7 +1057,7 @@ Partial Class SetDefaultsForm
         Me.progress.Location = New System.Drawing.Point(303, 20)
         Me.progress.Name = "progress"
         Me.progress.Size = New System.Drawing.Size(93, 21)
-        Me.progress.TabIndex = 9
+        Me.progress.TabIndex = 1
         '
         'Label17
         '
@@ -983,14 +1078,14 @@ Partial Class SetDefaultsForm
         Me.status_update.Location = New System.Drawing.Point(107, 20)
         Me.status_update.Name = "status_update"
         Me.status_update.Size = New System.Drawing.Size(117, 21)
-        Me.status_update.TabIndex = 7
+        Me.status_update.TabIndex = 0
         '
         'Label14
         '
         Me.Label14.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(6, 49)
+        Me.Label14.Location = New System.Drawing.Point(6, 86)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(112, 13)
         Me.Label14.TabIndex = 5
@@ -1000,10 +1095,10 @@ Partial Class SetDefaultsForm
         '
         Me.accconst.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.accconst.Location = New System.Drawing.Point(124, 46)
+        Me.accconst.Location = New System.Drawing.Point(124, 83)
         Me.accconst.Name = "accconst"
         Me.accconst.Size = New System.Drawing.Size(272, 20)
-        Me.accconst.TabIndex = 4
+        Me.accconst.TabIndex = 3
         '
         'Label15
         '
@@ -1052,7 +1147,7 @@ Partial Class SetDefaultsForm
         Me.purpose.Multiline = True
         Me.purpose.Name = "purpose"
         Me.purpose.Size = New System.Drawing.Size(332, 20)
-        Me.purpose.TabIndex = 4
+        Me.purpose.TabIndex = 2
         '
         'Label12
         '
@@ -1073,7 +1168,7 @@ Partial Class SetDefaultsForm
         Me.abstract.Multiline = True
         Me.abstract.Name = "abstract"
         Me.abstract.Size = New System.Drawing.Size(332, 20)
-        Me.abstract.TabIndex = 2
+        Me.abstract.TabIndex = 1
         '
         'Label4
         '
@@ -1099,7 +1194,7 @@ Partial Class SetDefaultsForm
         'btnOK
         '
         Me.btnOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnOK.Location = New System.Drawing.Point(333, 587)
+        Me.btnOK.Location = New System.Drawing.Point(333, 621)
         Me.btnOK.Name = "btnOK"
         Me.btnOK.Size = New System.Drawing.Size(92, 23)
         Me.btnOK.TabIndex = 2
@@ -1110,7 +1205,7 @@ Partial Class SetDefaultsForm
         '
         Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnCancel.Location = New System.Drawing.Point(235, 587)
+        Me.btnCancel.Location = New System.Drawing.Point(235, 621)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(92, 23)
         Me.btnCancel.TabIndex = 3
@@ -1125,7 +1220,7 @@ Partial Class SetDefaultsForm
         Me.GroupBox6.Controls.Add(Me.radLogNone)
         Me.GroupBox6.Controls.Add(Me.radLogExtended)
         Me.GroupBox6.Controls.Add(Me.radLogRegular)
-        Me.GroupBox6.Location = New System.Drawing.Point(11, 536)
+        Me.GroupBox6.Location = New System.Drawing.Point(11, 570)
         Me.GroupBox6.Name = "GroupBox6"
         Me.GroupBox6.Size = New System.Drawing.Size(412, 39)
         Me.GroupBox6.TabIndex = 7
@@ -1178,6 +1273,29 @@ Partial Class SetDefaultsForm
         Me.radLogRegular.Text = "Regular"
         Me.radLogRegular.UseVisualStyleBackColor = True
         '
+        'current
+        '
+        Me.current.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.current.FormattingEnabled = True
+        Me.current.Items.AddRange(New Object() {"ground condition", "publication date"})
+        Me.current.Location = New System.Drawing.Point(142, 52)
+        Me.current.Name = "current"
+        Me.current.Size = New System.Drawing.Size(168, 21)
+        Me.current.TabIndex = 2
+        Me.current.Text = "publication date"
+        '
+        'Label16
+        '
+        Me.Label16.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(6, 55)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(132, 13)
+        Me.Label16.TabIndex = 10
+        Me.Label16.Text = "What are Data Current to?"
+        '
         'SetDefaultsForm
         '
         Me.AcceptButton = Me.btnOK
@@ -1186,7 +1304,7 @@ Partial Class SetDefaultsForm
         Me.AutoScroll = True
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.CancelButton = Me.btnCancel
-        Me.ClientSize = New System.Drawing.Size(430, 616)
+        Me.ClientSize = New System.Drawing.Size(430, 650)
         Me.Controls.Add(Me.GroupBox6)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnOK)
@@ -1200,6 +1318,9 @@ Partial Class SetDefaultsForm
         Me.Text = "Set Default Parameters"
         Me.tabDefaults.ResumeLayout(False)
         Me.tabTransects.ResumeLayout(False)
+        CType(Me.btnHelpXectRelativeToBl, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.gbXectRelativeToBl.ResumeLayout(False)
+        Me.gbXectRelativeToBl.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         CType(Me.helpButtonVisualizeBaselineOrientation, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1208,7 +1329,10 @@ Partial Class SetDefaultsForm
         CType(Me.pbLeft1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
-        CType(Me.baselineSearchDistanceHelpBtn, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.helpButtonBaselineID, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox5.ResumeLayout(False)
+        Me.GroupBox5.PerformLayout()
+        CType(Me.helpButtonBaselineSearchDistance, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.helpButtonBaselineGroup, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabShorelineCalc.ResumeLayout(False)
         Me.grpBias.ResumeLayout(False)
@@ -1227,7 +1351,6 @@ Partial Class SetDefaultsForm
         Me.grpShoreline.PerformLayout()
         CType(Me.btnHelpDefaultUncerty, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage1.ResumeLayout(False)
-        Me.TabPage1.PerformLayout()
         Me.GroupBox7.ResumeLayout(False)
         Me.GroupBox7.PerformLayout()
         Me.GroupBox4.ResumeLayout(False)
@@ -1245,8 +1368,6 @@ Partial Class SetDefaultsForm
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents cmbBaselineFC As System.Windows.Forms.ComboBox
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-    Friend WithEvents cmbBaseGroup As System.Windows.Forms.ComboBox
-    Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents grpShoreline As System.Windows.Forms.GroupBox
     Friend WithEvents cmbUncertaintyField As System.Windows.Forms.ComboBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
@@ -1300,8 +1421,6 @@ Partial Class SetDefaultsForm
     Friend WithEvents postal As System.Windows.Forms.TextBox
     Friend WithEvents Label22 As System.Windows.Forms.Label
     Friend WithEvents state As System.Windows.Forms.TextBox
-    Friend WithEvents current As System.Windows.Forms.ComboBox
-    Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents btnShowLogLocation As System.Windows.Forms.Button
     Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
     Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
@@ -1311,7 +1430,6 @@ Partial Class SetDefaultsForm
     Friend WithEvents helpButtonLandDirection As System.Windows.Forms.PictureBox
     Friend WithEvents rad_right As System.Windows.Forms.RadioButton
     Friend WithEvents rad_left As System.Windows.Forms.RadioButton
-    Friend WithEvents helpButtonBaselineGroup As System.Windows.Forms.PictureBox
     Friend WithEvents helpButtonVisualizeBaselineOrientation As System.Windows.Forms.PictureBox
     Friend WithEvents helpButtonShorelineType As System.Windows.Forms.PictureBox
     Friend WithEvents cmbShorelineTypeField As System.Windows.Forms.ComboBox
@@ -1321,12 +1439,26 @@ Partial Class SetDefaultsForm
     Friend WithEvents helpButtonLidarTable As System.Windows.Forms.PictureBox
     Friend WithEvents cmbLidar As System.Windows.Forms.ComboBox
     Friend WithEvents lblUncertaintyTable As System.Windows.Forms.Label
-    Friend WithEvents baselineSearchDistanceHelpBtn As System.Windows.Forms.PictureBox
-    Friend WithEvents cmbBaselineSearchDistance As System.Windows.Forms.ComboBox
-    Friend WithEvents lblBaselineSearchDistanceField As System.Windows.Forms.Label
     Friend WithEvents pbs3 As System.Windows.Forms.PictureBox
     Friend WithEvents pbs2 As System.Windows.Forms.PictureBox
     Friend WithEvents pbl3 As System.Windows.Forms.PictureBox
     Friend WithEvents pbl2 As System.Windows.Forms.PictureBox
     Friend WithEvents btnHelpDefaultUncerty As System.Windows.Forms.PictureBox
+    Friend WithEvents GroupBox5 As System.Windows.Forms.GroupBox
+    Friend WithEvents lblBaselineSearchDistanceField As System.Windows.Forms.Label
+    Friend WithEvents cmbBaselineSearchDistance As System.Windows.Forms.ComboBox
+    Friend WithEvents helpButtonBaselineSearchDistance As System.Windows.Forms.PictureBox
+    Friend WithEvents helpButtonBaselineGroup As System.Windows.Forms.PictureBox
+    Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents cmbBaseGroup As System.Windows.Forms.ComboBox
+    Friend WithEvents helpButtonBaselineID As System.Windows.Forms.PictureBox
+    Friend WithEvents cmbBaselineID As System.Windows.Forms.ComboBox
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents gbXectRelativeToBl As System.Windows.Forms.GroupBox
+    Friend WithEvents rbCastOffShore As System.Windows.Forms.RadioButton
+    Friend WithEvents rbCastOnShore As System.Windows.Forms.RadioButton
+    Friend WithEvents rbCastBoth As System.Windows.Forms.RadioButton
+    Friend WithEvents btnHelpXectRelativeToBl As System.Windows.Forms.PictureBox
+    Friend WithEvents current As System.Windows.Forms.ComboBox
+    Friend WithEvents Label16 As System.Windows.Forms.Label
 End Class

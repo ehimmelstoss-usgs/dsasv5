@@ -117,4 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="tbCitation.Text" xml:space="preserve">
+    <value>Himmelstoss, E.A., Farris, A.S., Henderson, R.E., Kratzmann, M.G., Ergul, Ayhan, Zhang, Ouya, Zichichi, J.L., Thieler, E. R., 2018, Digital Shoreline Analysis System (version 5.0): U.S. Geological Survey software release, </value>
+  </data>
 </root>

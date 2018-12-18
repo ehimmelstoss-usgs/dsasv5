@@ -7,6 +7,7 @@
 # afarris@usgs.gov 2017Dec15 now if all shoreliens are HWL,and bias_flag =1 , then LRR = NB_LRR, WLR = NB_WLR
 # afarris@usgs.gov 2018Feb12 now if all shoreliens are MHW, and bias = 0 and bias_flag =1 , then LRR = NB_LRR, WLR = NB_WLR
 # afarris@usgs.gov 2018Feb13 the previous fix had forgotten WLR
+# afarris@usgs.gov 2018jun01 made some changes suggested by code review 
 
 def linreg(data):
     from math import sqrt
@@ -32,7 +33,7 @@ def linreg(data):
     Y = shoreNoBias
     n = len(X)
     df = n-2
-    alpha =  1 - (float(conf)*.01);
+    alpha =  1 - (float(conf)*.01)
     if df <= 0:
         #results wil be crazy, set output to NaN
         LRR = None
@@ -78,9 +79,9 @@ def linreg(data):
         SE = sqrt(rmse)
         # now calc confidence intervals
         # first calc standard error of the regression coefficient, Eqn 17.20
-        SERC = sqrt(rmse/SS);        
+        SERC = sqrt(rmse/SS)       
         #test statistic  for the two tailed test
-        t = invstudenttdistribution(df,1-alpha/2);
+        t = invstudenttdistribution(df,1-alpha/2)
         LCI = t*SERC
         if bias_flag:
             # bias is generally applied, save these rates at NB_*
@@ -92,7 +93,7 @@ def linreg(data):
                 flag = 0
                 for t in type:
                     if t != 'HWL':
-                       flag = flag + 1
+                        flag = flag + 1
                 if flag == 0 or flag == len(type):
                     # all shoreline are HWL or all are (MHW or WDL)
                     rates.update ( {'LRR': LRR, 'LR2': LR2, 'LCI': LCI, 'LSE': SE})
@@ -137,7 +138,7 @@ def linreg(data):
         SE = sqrt(rmse)
         # now calc confidence intervals
         # first calc standard error of the regression coefficient, Eqn 17.20
-        SERC = sqrt(rmse/SS);        
+        SERC = sqrt(rmse/SS)        
         LCI = t*SERC
         rates.update ( {'LRR': LRR, 'LR2': LR2, 'LCI': LCI, 'LSE': SE})
 
@@ -181,7 +182,7 @@ def weightlinreg(data):
     Y = shoreNoBias
     n = len(X)
     df = n-2
-    alpha =  1 - (float(conf)*.01);
+    alpha =  1 - (float(conf)*.01)
 
     if df <= 0:
         #results wil be crazy, set output to NaN
@@ -207,19 +208,19 @@ def weightlinreg(data):
 
         for x,y,w in zip(X,Y,W):
             # these are the Visual Basic eqns:
-            sumW =  sumW + w;
-            sumWY = sumWY + (w * y);
-            sumWX = sumWX + (w * x);
-            sumWXX = sumWXX + (w * x * x);
-            sumWYY = sumWYY + (w * y * y);
-            sumWXY = sumWXY + (w * x * y);
+            sumW =  sumW + w
+            sumWY = sumWY + (w * y)
+            sumWX = sumWX + (w * x)
+            sumWXX = sumWXX + (w * x * x)
+            sumWYY = sumWYY + (w * y * y)
+            sumWXY = sumWXY + (w * x * y)
         
         if sumW == 0:
             #throw exception, data is odd and code will crash
             raise Exception('IPY: There is something wrong with the uncertainties, are they all zero? ')
-        SS = sumWXX - (sumWX * sumWX/sumW);
-        SCP = sumWXY -(sumWX * sumWY/sumW);
-        totalSS = sumWYY - (sumWY * sumWY / sumW);
+        SS = sumWXX - (sumWX * sumWX/sumW)
+        SCP = sumWXY -(sumWX * sumWY/sumW)
+        totalSS = sumWYY - (sumWY * sumWY / sumW)
 
         if SS == 0:
             #throw exception, data is odd and code will crash
@@ -246,9 +247,9 @@ def weightlinreg(data):
 
         # now calc confidence intervals
         # first calc standard error of the regression coefficient, Eqn 17.20
-        SERC = sqrt(rmse/SS);        
+        SERC = sqrt(rmse/SS)        
         #test statistic  for the two tailed test
-        t = invstudenttdistribution(df,1-alpha/2);
+        t = invstudenttdistribution(df,1-alpha/2)
         WCI = t*SERC
         if bias_flag:
             # bias is generally applied save these data as NB_*
@@ -294,19 +295,19 @@ def weightlinreg(data):
 
         for x,y,w in zip(X,Y,W):
             # these are the Visual Basic eqns:
-            sumW =  sumW + w;
-            sumWY = sumWY + (w * y);
-            sumWX = sumWX + (w * x);
-            sumWXX = sumWXX + (w * x * x);
-            sumWYY = sumWYY + (w * y * y);
-            sumWXY = sumWXY + (w * x * y);
+            sumW =  sumW + w
+            sumWY = sumWY + (w * y)
+            sumWX = sumWX + (w * x)
+            sumWXX = sumWXX + (w * x * x)
+            sumWYY = sumWYY + (w * y * y)
+            sumWXY = sumWXY + (w * x * y)
         
         if sumW == 0:
             #throw exception, data is odd and code will crash
             raise Exception('IPY: There is something wrong with the uncertainties, are they all zero?  ')
-        SS = sumWXX - (sumWX * sumWX/sumW);
-        SCP = sumWXY -(sumWX * sumWY/sumW);
-        totalSS = sumWYY - (sumWY * sumWY / sumW);
+        SS = sumWXX - (sumWX * sumWX/sumW)
+        SCP = sumWXY -(sumWX * sumWY/sumW)
+        totalSS = sumWYY - (sumWY * sumWY / sumW)
 
         if SS == 0:
             #throw exception, data is odd and code will crash
@@ -333,7 +334,7 @@ def weightlinreg(data):
 
         # now calc confidence intervals
         # first calc standard error of the regression coefficient, Eqn 17.20
-        SERC = sqrt(rmse/SS);        
+        SERC = sqrt(rmse/SS)        
         WCI = t*SERC
 
         rates.update ( {'WLR': WLR, 'WR2': WR2, 'WCI': WCI, 'WSE': SE})

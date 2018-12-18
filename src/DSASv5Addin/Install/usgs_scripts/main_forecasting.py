@@ -1,5 +1,10 @@
 from math import sqrt
-from DSAS_kalmanfilter import *
+from DSAS_kalmanfilter import multiply_mat
+from DSAS_kalmanfilter import multiply_colvec_mat 
+from DSAS_kalmanfilter import matrixTranspose
+from DSAS_kalmanfilter import sub_mats
+from DSAS_kalmanfilter import add_mats
+from DSAS_kalmanfilter import kalman
 
 
 
@@ -10,6 +15,8 @@ from DSAS_kalmanfilter import *
 # afarris@usgs.gov 2018jan10 added an excetption for 'z', b/c old way was not catching that z was empty 
 # afarris@usgs.gov 2018jan10 added excetptions to catch DBNull 
 # afarris@usgs.gov 2018jan24 relaxed excetption that compares re-calculated rate to old rate 
+# afarris@usgs.gov 2018may21 time step is now 0.1 of a year 
+# afarris@usgs.gov 2018jun01 made some changes suggested by code review 
 
 # if running code on it's own to test:
 # sample data (tr #966)
@@ -31,6 +38,16 @@ params = {
     "LCI": 0.8,
     "LSE": 34.1,
     "forecast_length": [20]}
+
+params = {
+"dates": [1859.9,   1924.5,   1937.6,   1956.8,   1970.6,   1973.8,   1977.6,   1999.8,   2006,   2016.3,   2017.3],
+"shore": [120.3, 389.4,   101.1,   59.1,   39.7,  -42.8,   45.3,  -95.4,   56.1,   12.2,  -5.6],
+"uncy":  [11.35,  11.35,  11.35,  11.35,   4.7,   6.19,   4.73,   5.43,   3.80,   0.5,   0.5],
+"LRR": -1.53,
+"LCI": 1.33,
+"LSE": 107.83,
+"forecast_length": [20]}
+
 # test with bad data:
 #params = {
 #    "dates":  [1842, 1946, 1980,],
@@ -110,7 +127,8 @@ def calc_forecast(params):
 
 
     # Define inputs to the Kalman Filter that will be hard-coded in current release
-    dt_model = 1
+    # now 0.1 of a year
+    dt_model = 0.1
     # Process noise estimate
     # a low value here means we believe our model that the shoreline should
     # follow a more or less linear trend line
@@ -124,20 +142,16 @@ def calc_forecast(params):
     # dates need to be integers, convert from float:
     t =[]
     for temp in dates:
-        tempB = int(round(temp))
+        tempB = round(temp,1)
         t.append(tempB)
 
     # I need to convert the scalers LCI, LRR and LSE to vectors the same size as t, z and uncy.
     # I will call these new vectors lci, lrr and lse
     # I think my nameing convention is a bit backwards, captial letters are traditionally matricies, 
     # but this is just how the code evolved.
-    lse = []
-    lrr = []
-    lci = []
-    for junk in t:
-        lse.extend([LSE])
-        lci.extend([LCI])
-        lrr.extend([LRR])
+    lse = [LSE] * len(t)
+    lrr = [LRR] * len(t)
+    lci = [LCI] * len(t)
 
     # We need y-intercept, I'll calculate it
     mean = lambda nums: sum(nums, 0.0) / len(nums)
@@ -188,10 +202,11 @@ def calc_forecast(params):
         shore20p = shore20 + sqrt(u)
         shore20m = shore20 - sqrt(u)
         # get 10 year predictions out of returned lists
-        date10 = T[n-11]
-        temp = Xc[n-11]
+        # use '11' if time step is yearly, use '101' if time step is 0.1 year
+        date10 = T[n-101]
+        temp = Xc[n-101]
         shore10 = temp[0]
-        temp = Pc[n-11]
+        temp = Pc[n-101]
         tempB = temp[0]
         u = tempB[0]
         shore10p = shore10 + sqrt(u)
@@ -229,7 +244,7 @@ def calc_forecast(params):
         forecast = [[20, date20, shore20m, shore20, shore20p]]
     else:
        #throw exception, 
-       raise Exception('IPY: There is something wrong with predition_term  ')
+       raise Exception('IPY: There is something wrong with prediction_term  ')
 
     return (forecast)
 

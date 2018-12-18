@@ -31,6 +31,7 @@ Public Class RateCalculation
         Public shoreDateStr As String
         Public shoreType As String = ""
         Public xectId As Integer
+        Public xectOrder As Integer
         Public blId As Integer
         Public m As Double = -1   'invalid value
         Public x As Double
@@ -190,6 +191,7 @@ Public Class RateCalculation
 
             With newFeature
                 .Value(newFeature.Fields.FindField("TransectId")) = xectId
+                .Value(newFeature.Fields.FindField("TransOrder")) = xectOrder
                 .Value(newFeature.Fields.FindField("BaselineId")) = blId
                 .Value(newFeature.Fields.FindField("ShorelineId")) = shoreDateStr
                 .Value(newFeature.Fields.FindField("Distance")) = dFromBl
@@ -269,8 +271,7 @@ Public Class RateCalculation
             dFromBl = MapUtility.GetDistanceBetweenTwoPoints(isectPoint, xectBaselinePoint)
 
             Dim bRightSide As Boolean
-            Dim ht As IHitTest = DirectCast(blGeom, IHitTest)
-            ht.HitTest(isectPoint, xectGeom.Length * 1.01, esriGeometryHitPartType.esriGeometryPartBoundary, Nothing, Nothing, Nothing, Nothing, bRightSide)
+            blGeom.QueryPointAndDistance(esriSegmentExtension.esriNoExtension, isectPoint, False, Nothing, Nothing, Nothing, bRightSide)
             If (bRightSide AndAlso My.Settings.Land_On_Right_Side) OrElse (Not bRightSide AndAlso Not My.Settings.Land_On_Right_Side) Then
                 dFromBl = -dFromBl
             End If
@@ -308,12 +309,11 @@ Public Class RateCalculation
     ''' 
     ''' </summary>
     ''' <param name="xectLyrName"></param>
-    ''' <param name="filename"></param>
     ''' <param name="threshold"></param>
     ''' <returns>An empty string if all records are successfully written. If there were no records to write 
     ''' or if there were errors a string describing the problem is returned and must be regarded as failure.</returns>
     ''' <remarks></remarks>
-    Public Shared Function walkAndCalc(ByVal xectLyrName As String, ByVal filename As String, ByVal threshold As Integer) As String
+    Public Shared Function walkAndCalc(xectLyrName As String, ratesLyrName As String, ByVal threshold As Integer) As String
         log("START CALCS")
         DSAS.seaward = nv(getSeawardLandwardSettingFromMetadata(TransectLyrToolCtl.currentTransectLayer), My.Settings.Seaward)
         Dim blCursor As IFeatureCursor = Nothing
@@ -380,15 +380,13 @@ Public Class RateCalculation
             'The data structure to hold info about a transect's intersections with each shoreline
             Dim shoreIntersects As New SortedDictionary(Of Date, IntersectData)
 
-            Dim outputTableName As String = DSASUtility.makeOutputTablename(filename)
-            Dim intersectLayerName As String = xectLyrName + "_intersect_" + outputTableName.Split(New String() {"_rates_"}, StringSplitOptions.None)(1)
+            Dim intersectLayerName As String = DSASUtility.layernameConvert(ratesLyrName, "rates", "intersect")
 
             If GeoDB.CreateWorkspaceFeatureClassAndAddToTOC(intersectLayerName, "intersect", Nothing, xectLyrName, applyBias) Is Nothing Then
                 result = "Unable to create intersect featureclass!"
                 Exit Try
             End If
 
-            Dim ratesLyrName As String = xectLyrName + "_rates_" + outputTableName.Split(New String() {"_rates_"}, StringSplitOptions.None)(1)
             Dim ratesFc As IFeatureClass = GeoDB.CreateWorkspaceFeatureClassAndAddToTOC(ratesLyrName, "rates", Nothing, xectLyrName)
 
             If ratesFc Is Nothing Then
@@ -405,7 +403,7 @@ Public Class RateCalculation
             Dim currGrp As Integer = -1
             Dim dAlongCum As Double = 0
 
-            blCursor = GeoDB.getCursorForLayer(My.Settings.Baseline_Feature_Layer, "ID", "ID>0")
+            blCursor = GeoDB.getCursorForLayer(My.Settings.Baseline_Feature_Layer, My.Settings.Baseline_ID_Field, My.Settings.Baseline_ID_Field & " > 0")
             Dim lastBlPt As IPoint = Nothing
             Dim xectsProcessed As Long = 0
             Do
@@ -450,7 +448,7 @@ Public Class RateCalculation
                     ' Cache all shore features around the middle of the transect and at a distance where they could touch the transect
                     Dim xectMidPt As New PointClass
                     xectGeom.QueryPoint(esriSegmentExtension.esriNoExtension, 0.5, True, xectMidPt)
-                    shoreCache.Initialize(xectMidPt, xectGeom.Length * 1.01)  'Allow for 1% error
+                    shoreCache.Initialize(xectMidPt, xectGeom.Length * 2.02)  'Allow for 1% error
                     shoreCache.AddFeatures(shoreFeatClass)
 
                     For i As Integer = 0 To shoreCache.Count - 1
@@ -483,6 +481,7 @@ Public Class RateCalculation
                                 currIntersect.dFromAnchor < shoreIntersects(currIntersect.shoreDate).dFromAnchor Then
                                 ' Record intersect data
                                 currIntersect.xectId = xectFeat.OID
+                                currIntersect.xectOrder = xectFeat.Value(xectFeat.Fields.FindField("TransOrder"))
                                 currIntersect.blId = blId
                                 ' Register intersect (possibly overwriting another intersect with the same shoreline)
                                 shoreIntersects(currIntersect.shoreDate) = currIntersect
@@ -705,7 +704,7 @@ Public Class RateCalculation
                 Return False
             End If
 
-            cntNulls = GeoDB.countNulls(baselineTableSource, "ID")
+            cntNulls = GeoDB.countNulls(baselineTableSource, My.Settings.Baseline_ID_Field)
             If cntNulls > 0 Then
                 msg = "Baseline layer '" + baselineTable + "' has " + CStr(cntNulls) + " record(s) that did not have a value specified in the ID field. Please edit null values for ID in the attribute table of the specified baseline layer before proceeding."
                 log(TraceLevel.Error, msg)
@@ -721,14 +720,14 @@ Public Class RateCalculation
 
             ' Baselines should have unique ID numbers except for those with ID=0 to indicate they are excluded.
             Try
-                sql = "select ID, count(*) as cnt from [" + baselineTableSource + "] where ID>0 group by ID having count(*)>1"
+                sql = String.Format("select {0}, count(*) as cnt from [{1}] where {0}>0 group by {0} having count(*)>1", My.Settings.Baseline_ID_Field, baselineTableSource)
                 cn = MapUtility.dbConnectionForLayer(baselineTable)
                 cmd = New OleDbCommand(sql, cn)
                 dr = cmd.ExecuteReader
 
                 If dr.Read() Then
                     msg = "Baseline layer '" + baselineTable + "' requires unique ID numbers (zero values are excluded). "
-                    msg += "ID value " + dr("ID").ToString + " is repeated " + dr("cnt").ToString + " times."
+                    msg += My.Settings.Baseline_ID_Field + " value " + dr(My.Settings.Baseline_ID_Field).ToString + " is repeated " + dr("cnt").ToString + " times."
                     log(TraceLevel.Error, msg)
                     Return False
                 End If
@@ -750,11 +749,11 @@ Public Class RateCalculation
                 End If
 
                 Try
-                    sql =
-                        "SELECT a.[" + grp + "] as grpA, b.[" + grp + "] as grpB " &
-                        "FROM [" + baselineTableSource + "] as a, [" + baselineTableSource + "] as b, [" + baselineTableSource + "] as c " &
-                        "WHERE(a.ID < b.ID And b.ID < c.ID)" &
-                        "AND a.[" + grp + "]=c.[" + grp + "] AND a.[" + grp + "]<>b.[" + grp + "]"
+                    sql = String.Format(
+                        "SELECT a.[{0}] as grpA, b.[{0}] as grpB " &
+                        "FROM [{1}] as a, [{1}] as b, [{1}] as c " &
+                        "WHERE(a.{2} < b.{2} And b.{2} < c.{2})" &
+                        "AND a.[{0}]=c.[{0}] AND a.[{0}]<>b.[{0}]", grp, baselineTableSource, My.Settings.Baseline_ID_Field)
 
                     cn = MapUtility.dbConnectionForLayer(baselineTable)
                     cmd = New OleDbCommand(sql, cn)
@@ -787,7 +786,7 @@ Public Class RateCalculation
                     If System.Windows.Forms.MessageBox.Show(msg, "DSAS", System.Windows.Forms.MessageBoxButtons.OKCancel, System.Windows.Forms.MessageBoxIcon.Question) = System.Windows.Forms.DialogResult.OK Then
                         If sortAlongBaseline() Then
                             MsgBox("TransOrder values have been re-assigned. Please ensure BaselineId and " & vbCrLf &
-                                "(if applicable) group values are correctly assigned before calculating statistics again.")
+                                "(if applicable) group values are correctly assigned before calculating statistics again.",, DSAS.MsgBoxTitle)
                         Else
                             msg = "There was a problem while processing TransOrder values."
                             log(TraceLevel.Error, msg)
@@ -901,7 +900,7 @@ Public Class RateCalculation
                         dr = cmd.ExecuteReader
 
                         If dr.Read() Then
-                            msg = "Shoreline type field '" + My.Settings.Shoreline_Type_Field + "' should always have a value of 'MHW' or 'HWL'"
+                            msg = "The Shoreline Type Field should always have a value of 'MHW' or 'HWL'. Please check the selection of this field in the Shoreline Calculation Settings of the Set Default Parameters window, or verify the values of this field in the attribute table."
                             log(TraceLevel.Error, msg)
                             Return False
                         End If
@@ -963,7 +962,7 @@ Public Class RateCalculation
     Public Shared Function sortAlongBaseline() As Boolean
         Try
             Dim pGeoColl As IGeometryCollection = New Polyline
-            Dim blFC As IFeatureCursor = GeoDB.getCursorForLayer(My.Settings.Baseline_Feature_Layer, "ID", "ID>0")
+            Dim blFC As IFeatureCursor = GeoDB.getCursorForLayer(My.Settings.Baseline_Feature_Layer, My.Settings.Baseline_ID_Field, My.Settings.Baseline_ID_Field & " > 0")
             Dim blFeat As IFeature
             Do
                 blFeat = blFC.NextFeature

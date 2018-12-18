@@ -2,11 +2,11 @@
   <Name>DSAS v5.0 add-in</Name>
   <AddInID>{a2b17571-2e57-4082-aba8-3f1ea3129e38}</AddInID>
   <Description>Digital Shoreline Analysis System</Description>
-  <Version>5.0.20180213.1225</Version>
+  <Version>5.0.20181212.1400</Version>
   <Image>Resources\aboutDSAS.jpg</Image>
   <Author>Ayhan Ergul</Author>
   <Company>Corona Environmental Consulting</Company>
-  <Date>2/13/2018</Date>
+  <Date>12/12/2018</Date>
   <Targets>
     <Target name="Desktop" version="10.4" />
   </Targets>
@@ -18,10 +18,10 @@
         <Button id="DSASAddin_CastButton" class="CastButton" caption="Cast transects" tip="Cast transects and select smoothing distance" category="DSAS v5.0" image="Images\castnormal.bmp" />
         <Button id="DSASAddin_DefaultsButton" class="DefaultsButton" caption="Default parameters" tip="Baseline, shoreline calculation, and metadata settings" category="DSAS v5.0" image="Images\defaults.bmp" />
         <Button id="DSASAddin_CalculateButton" class="CalculateButton" caption="Calculate rates" tip="Select statistics to calculate" category="DSAS v5.0" image="Images\cog.png" />
-        <Button id="DSASAddin_AboutButton" class="AboutButton" caption="About DSAS" tip="DSAS v5 information and version" category="DSAS v5.0" image="Images\about.bmp" />
-        <Button id="DSASAddin_HelpButton" class="HelpButton" caption="DSAS Help" tip="DSAS v5 user guide" category="DSAS v5.0" image="Images\help.gif" />
+        <Button id="DSASAddin_AboutButton" class="AboutButton" caption="About DSAS" tip="DSAS v5.0 information and version" category="DSAS v5.0" image="Images\about.bmp" />
+        <Button id="DSASAddin_HelpButton" class="HelpButton" caption="DSAS Help" tip="DSAS v5.0 user guide" category="DSAS v5.0" image="Images\help.gif" />
         <Button id="DSASAddin_ClipButton" class="ClipButton" caption="Data visualization" tip="Shoreline change envelope and rates display options" category="DSAS v5.0" image="Images\sce_button.bmp" />
-        <Button id="DSASAddin_ShorelineForecastButton" class="ShorelineForecastButton" caption="Shoreline forecasting" tip="Shoreline forecasting" category="DSAS v5.0" image="Images\crystal_ball.png" />
+        <Button id="DSASAddin_ShorelineForecastButton" class="ShorelineForecastButton" caption="BETA Shoreline forecasting" tip="BETA Shoreline forecasting" category="DSAS v5.0" image="Images\crystal_ball.png" />
         <ComboBox id="DSASAddin_TransectLyrToolCtl" class="TransectLyrToolCtl" caption="Transect layer selection" tip=" Select transect file for use in rate calculation" category="DSAS v5.0" sizeString="WWWWWWWWWWWWWW" itemSizeString="WWWWWWWWWWWWWWWWWWWWW" showCaption="true" />
       </Commands>
       <Extensions>

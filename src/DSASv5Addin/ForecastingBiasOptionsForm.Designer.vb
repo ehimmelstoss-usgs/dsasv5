@@ -82,8 +82,8 @@ Partial Class ForecastingBiasOptionsForm
         Me.Controls.Add(Me.textArea)
         Me.Controls.Add(Me.btnStop)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "ForecastingBiasOptionsForm"
-        Me.ShowIcon = False
         Me.Text = "DSAS Alert"
         Me.ResumeLayout(False)
         Me.PerformLayout()

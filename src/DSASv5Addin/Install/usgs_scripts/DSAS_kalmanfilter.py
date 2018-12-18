@@ -3,6 +3,9 @@
 # Python version 2.7
 
 # afarris@usgs.gov 2017nov22 my first attempt at integrating this code into DSAS
+# afarris@usgs.gov 2018may21 minor changes to allow time step to be 0.1 of a year
+# afarris@usgs.gov 2018jun01 made some changes suggested by code review 
+# afarris@usgs.gov 2018Aug07 fixed minor disrepancy, first time step is now the first date
 
 """
 Created on Wed Aug 23 16:03:11 2017
@@ -32,6 +35,7 @@ OUTPUTS:
 
 Code adapted from Kalman Fiter MATLAB function; Author: Joe Long, USGS; jwlong@usgs.gov
 """
+import datetime
 
 def multiply_mat(X, Y):
     return [[sum(X*Y for X,Y in zip(X_row,Y_col)) for Y_col in zip(*Y)] for X_row in X]
@@ -58,30 +62,47 @@ def matrixTranspose(anArray):
 ###############################################################################
 
 # Define inputs to the Kalman Filter that will be hard-coded in current release
-dt_model = 1
+# dt_model = 0.1
 
 # Define the forecast length (e.g., 10, 20 years)
-forecast_length = 9
+# forecast_length = 9
 
 # Process noise estimate
 # a low value here means we believe our model that the shoreline should
 # follow a more or less linear trend line
-qf = 0.1
+# qf = 0.1
 
 ##############################################################################
 
-import datetime
 
 
 def kalman(dt_model,forecast_length,qf,t,z,lse,uncy,lci90,xo):
 
     
-    if not t or not z or not lse or not uncy or not lci90 or not xo:
+    if not t :
        # throw exception, input data not passed in
-       raise Exception('IPY: A least one of the following is empty: dates, shore, uncy, CI, group ')
-    if len(t) != len(z) or len(t) != len(uncy) or len(t) != len(lci90) :
+       raise Exception('IPY: dates is empty ')
+    if not z :
+       # throw exception, input data not passed in
+       raise Exception('IPY: shore is empty ')
+    if not lse :
+       # throw exception, input data not passed in
+       raise Exception('IPY: uncy is empty ')
+    if not lci90 :
+       # throw exception, input data not passed in
+       raise Exception('IPY: CI is empty ')
+    if not xo:
+       # throw exception, input data not passed in
+       raise Exception('IPY: group is empty ')
+    if len(t) != len(z)  :
        # throw exception
-       raise Exception('IPY: all these variables should be the same length: dates, shore, uncy. ' )
+       raise Exception('IPY: dates and shore should be the same length. ' )
+    if len(t) != len(uncy)  :
+       # throw exception
+       raise Exception('IPY: dates and uncy should be the same length. ' )
+    if len(t) != len(lci90) :
+       # throw exception
+       raise Exception('IPY: dates and CI shoule be the same length. ' )
     if sum(t) <= 0 :
        # throw exception, 
        raise Exception('IPY: Something is wrong with the dates ')
@@ -93,10 +114,28 @@ def kalman(dt_model,forecast_length,qf,t,z,lse,uncy,lci90,xo):
     # Initialize time vector time step
     now = datetime.datetime.now()
 
+    # force it to round down
     startT = t[:1][0]
+    startT = int(startT//1)
+   
+    # set up list of dates to loop over
+    # time step is now a tenth of a year, but "range" only works with
+    # integers, so we had to do this oddly
+    T = list(x/10.0 for x in range(startT*10, (now.year+forecast_length)*10))
 
-    # hard-code a 10 year forecast or mak[Xce this an input variable
-    T = list(range(startT,now.year+forecast_length))
+    # We want the first time step to be the date of the first survey. 
+    # Next I get rid of the time steps before the first date.
+    # (Yes, this is klugey, but the line above, defining "T", didn't work if "startT" was not an integer)
+    # afarris@usgs.gov 2018Aug07
+    a = 0
+    for temp in T:
+        tempDiff = t[0] - temp
+        if tempDiff < 0.01:
+            startIndex = a
+            break
+        else:
+            a = a + 1
+    T = T[startIndex:]
 
     # Create model matrix
     A = []
@@ -119,11 +158,11 @@ def kalman(dt_model,forecast_length,qf,t,z,lse,uncy,lci90,xo):
         Q.append([0] * 2)
 
 
-    Q[0][0]=round((qf**2)*(dt_model**3)/3,8)
+    Q[0][0]=round((qf**2)*(dt_model**3)/3.0,8)
 
-    Q[0][1]=round((qf**2)*(dt_model**2)/2,8)
+    Q[0][1]=round((qf**2)*(dt_model**2)/2.0,8)
 
-    Q[1][0]=round((qf**2)*(dt_model**2)/2,8)
+    Q[1][0]=round((qf**2)*(dt_model**2)/2.0,8)
 
     Q[1][1]=round((qf**2)*dt_model,8)
 
@@ -205,7 +244,7 @@ def kalman(dt_model,forecast_length,qf,t,z,lse,uncy,lci90,xo):
             Xp[j][0] = Xp1[0][0]
             Xp[j][1] = Xp1[0][1]
         except:
-            raise Exception('IPY: THere was a problem with the matrix algebra  ' )
+            raise Exception('IPY: There was a problem with the matrix algebra  ' )
 
         try:
             # Compute A PRIORI error covariance 

@@ -16,9 +16,10 @@ Public Class ShorelineForecastForm
         initRadioButtons()
     End Sub
 
+
     Private Sub initRateLyrCombobox()
         For Each lyr As ESRI.ArcGIS.Carto.IFeatureLayer In MapUtility.featureLayers("forecastablerates")
-            If MapUtility.findFeatureLayer(lyr.Name.Replace("_rates_", "_intersect_"), "intersect") IsNot Nothing Then
+            If MapUtility.findFeatureLayer(DSASUtility.layernameConvert(lyr.Name, "rates", "intersect"), "intersect") IsNot Nothing Then
                 listboxRateLayer.Items.Add(lyr.Name)
             End If
         Next
@@ -76,6 +77,9 @@ Public Class ShorelineForecastForm
 
     Private Sub btnRunForecast_Click(sender As Object, e As EventArgs) Handles btnRunForecast.Click
         btnRunForecast.Enabled = False
+
+        DoNotShowAgainForm.prompt("PLEASE NOTE: This BETA forecasting tool will not be ideal for all locations, data types and patterns of shoreline change. It is up to the user to consider the specifications and limitations of their data when using this tool to determine a forecasted shoreline position.", "DoNotShowAgainForecastCaveat")
+
         Dim stepPro As ESRI.ArcGIS.esriSystem.IStepProgressor = Nothing
         Dim cn As OleDb.OleDbConnection = Nothing
 
@@ -90,7 +94,7 @@ Public Class ShorelineForecastForm
             If checkboxTwentyYears.Checked Then data_forecast_periods.Add(20)
 
             Dim forecastLyrSource As String = GeoDB.getSourceTableName(forecastLyrName)
-            Dim isectLyrName As String = forecastLyrName.Replace("_rates_", "_intersect_")
+            Dim isectLyrName As String = DSASUtility.layernameConvert(forecastLyrName, "rates", "intersect")
             Dim isectLyrSource As String = GeoDB.getSourceTableName(isectLyrName)
 
             ' Find the "distance" field
@@ -198,6 +202,9 @@ Public Class ShorelineForecastForm
                 forecast_fcs.Add(period, forecast_period_fcs)
             Next
 
+            Dim forecastOutput As IFeatureClass = GeoDB.CreateWorkspaceFeatureClassAndAddToTOC(DSASUtility.layernameConvert(forecastLyrName, "rates", "forecast_points"), "forecast_points", Nothing, forecastLyrName)
+            If forecastOutput Is Nothing Then Exit Sub
+
             Dim done As Boolean = False
             Dim xectOrder As Integer = -1
             Dim xectId As Integer = -1
@@ -251,6 +258,9 @@ Public Class ShorelineForecastForm
 
                                 Dim m As IPointCollection = forecast_geoms(period)("mid")
                                 m.AddPoint(midcasePt)
+
+                                ' Add record to forecast table - TODO: double check values passed in
+                                addForecastTableRecord(forecastOutput, period, cal_year, Math.Abs(midcase - bestcase), midcase, midcasePt, xectId, xectOrder, tcd)
 
                                 Dim w As IPointCollection = forecast_geoms(period)("worst")
                                 If w.PointCount = 0 Then
@@ -313,9 +323,13 @@ Public Class ShorelineForecastForm
 
             For Each period As Integer In data_forecast_periods
                 For Each typ In DirectCast(forecast_fcs(period), IronPython.Runtime.PythonDictionary).viewkeys
+                    Dim ifc As IFeatureClass = forecast_fcs(period)(typ)
+                    Metadata.createMetadata(ifc.AliasName, typ, New Dictionary(Of String, String) From {{"forecastPeriod", period}})
                     ReleaseComObject(forecast_fcs(period)(typ))
                 Next
             Next
+
+            Metadata.createMetadata(forecastOutput.AliasName, "forecast_points", New Dictionary(Of String, String) From {{"forecastPeriods", String.Join(", ", data_forecast_periods)}})
 
         Finally
             btnRunForecast.Enabled = True
@@ -456,7 +470,7 @@ Public Class ShorelineForecastForm
         Dim lyrName = rateLyrNameToForecastLyrName(forecastableLyrName, period, uncy)
         Dim lyrTypeName As String
         If uncy Then
-            lyrTypeName = "forecastuncy"
+            lyrTypeName = "forecast_uncy"
             If period = 10 Then
                 simpleRenderer.Symbol = MapUtility.fillSymbol(128, 205, 193)
             ElseIf period = 20 Then
@@ -472,6 +486,7 @@ Public Class ShorelineForecastForm
         End If
 
         Dim fc As IFeatureClass = GeoDB.CreateWorkspaceFeatureClassAndAddToTOC(lyrName, lyrTypeName, Nothing, forecastableLyrName)
+        If fc Is Nothing Then Return Nothing
 
         Dim lyr As IGeoFeatureLayer = MapUtility.findFeatureLayer(lyrName)
         If simpleRenderer.Symbol IsNot Nothing Then lyr.Renderer = simpleRenderer
@@ -479,6 +494,31 @@ Public Class ShorelineForecastForm
 
         Return fc
     End Function
+
+
+    Shared Sub addForecastTableRecord(forecastTable As IFeatureClass, forecastPeriod As Integer, forecastDate As Integer, uncy As Double, distanceToBaseline As Double, midCasePt As IPoint, xectId As Integer, xectOrder As Integer, tcd As Double)
+        Try
+            Dim forecastRecord As IFeature = forecastTable.CreateFeature
+            With forecastRecord
+                .Shape = clonePoint(midCasePt)
+                .Value(forecastTable.FindField("ForecastPeriod")) = forecastPeriod
+                .Value(forecastTable.FindField("ForecastYear")) = forecastDate
+                .Value(forecastTable.FindField("Uncertainty")) = uncy
+                .Value(forecastTable.FindField("Distance")) = distanceToBaseline
+                .Value(forecastTable.FindField("IntersectX")) = midCasePt.X
+                .Value(forecastTable.FindField("IntersectY")) = midCasePt.Y
+                .Value(forecastTable.FindField("TransectID")) = xectId
+                .Value(forecastTable.FindField("TransOrder")) = xectOrder
+                .Value(forecastTable.FindField("TCD")) = tcd
+
+                ' save the row
+                .Store()
+            End With
+        Catch ex As Exception
+            handleException(ex)
+            Throw ex
+        End Try
+    End Sub
 
 
 End Class

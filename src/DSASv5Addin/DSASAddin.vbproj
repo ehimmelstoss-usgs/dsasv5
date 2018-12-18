@@ -232,6 +232,12 @@
     <Compile Include="DSASUtility.vb" />
     <Compile Include="EsriXslExtSim.vb" />
     <Compile Include="Geodbases.vb" />
+    <Compile Include="HelpForm.Designer.vb">
+      <DependentUpon>HelpForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HelpForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ipy.vb" />
     <Compile Include="LandRelatiToBaseliHelpForm.Designer.vb">
       <DependentUpon>LandRelatiToBaseliHelpForm.vb</DependentUpon>
@@ -309,6 +315,9 @@
     <EmbeddedResource Include="ForecastingBiasOptionsForm.resx">
       <DependentUpon>ForecastingBiasOptionsForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="HelpForm.resx">
+      <DependentUpon>HelpForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LandRelatiToBaseliHelpForm.resx">
       <DependentUpon>LandRelatiToBaseliHelpForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -344,7 +353,7 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <AddInContent Include="Install\DSAShelp.chm" />
+    <AddInContent Include="Install\DSAS v5.0 User Guide.pdf" />
     <None Include="Install\Lib\ensurepip\_bundled\pip-8.1.1-py2.py3-none-any.whl" />
     <None Include="Install\Lib\ensurepip\_bundled\setuptools-20.10.1-py2.py3-none-any.whl" />
     <None Include="packages.config" />
@@ -450,11 +459,6 @@
     <AddInContent Include="Images\castnormal.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <AddInContent Include="Install\template\calc\DSASCore.calc.exe" />
-    <AddInContent Include="Install\template\calc\DSASCore.info.xml" />
-    <AddInContent Include="Install\template\calc\ReadMe_calc.txt" />
-    <AddInContent Include="Install\template\data\ReadMe_data.txt" />
-    <AddInContent Include="Install\template\metadata\DSAS_Metadata_Template.xml" />
     <AddInContent Include="Install\template\metadata\ReadMe_metadata.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -468,9 +472,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\attribute_button_vi8_icon.ico" />
-    <AddInContent Include="Images\Baseline_Graphic_UPDATE-01.jpg" />
-    <AddInContent Include="Images\Baseline_Graphic_UPDATE-02.jpg" />
-    <Content Include="Images\Baseline_HELP_Graphics_UPDATE4-RIGHT.png" />
+    <Content Include="Images\Baseline_Graphic_UPDATE_LEFT.jpg" />
+    <Content Include="Images\Baseline_Graphic_UPDATE_RIGHT.jpg" />
+    <Content Include="Images\Baseline_HELP_Graphics_UPDATE_LEFT.png" />
+    <Content Include="Images\Baseline_HELP_Graphics_UPDATE_RIGHT.png" />
     <Content Include="Images\baseline_search_distance_help.png" />
     <AddInContent Include="Images\sce_button.bmp" />
     <Content Include="Images\calc_stat_Yhn_icon.ico" />
@@ -486,6 +491,17 @@
     <AddInContent Include="Install\usgs_scripts\summaryCalcsLookup.py" />
     <AddInContent Include="Install\usgs_scripts\DSAS_kalmanfilter.py" />
     <AddInContent Include="Install\usgs_scripts\main_forecasting.py" />
+    <AddInContent Include="Install\template\metadata\DSAS_Metadata_Template_Forecast.xml" />
+    <AddInContent Include="Install\template\metadata\DSAS_Metadata_Template_Forecast_Uncy.xml" />
+    <AddInContent Include="Install\template\metadata\DSAS_Metadata_Template_Intersect.xml" />
+    <AddInContent Include="Install\template\metadata\DSAS_Metadata_Template_Rates.xml" />
+    <AddInContent Include="Install\template\metadata\DSAS_Metadata_Template_Transect.xml">
+      <SubType>Designer</SubType>
+    </AddInContent>
+    <AddInContent Include="Install\template\metadata\DSAS_Metadata_Template_Forecast_Points.xml">
+      <SubType>Designer</SubType>
+    </AddInContent>
+    <None Include="Resources\AboutDSAS.png" />
     <None Include="Images\folder.png" />
     <Content Include="Images\landward1.png" />
     <Content Include="Images\landward2.png" />

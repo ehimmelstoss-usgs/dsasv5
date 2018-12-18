@@ -7,6 +7,18 @@ Imports ESRI.ArcGIS.Display
 
 Public Class SetDefaultsForm
     Private _cancelled As Boolean = False
+
+    Public Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        btnHelpXectRelativeToBl.Location = New Drawing.Point(btnHelpXectRelativeToBl.Location.X, gbXectRelativeToBl.Location.Y - 4)
+        GroupBox2.Size = New Drawing.Size(GroupBox2.Size.Width, GroupBox2.Size.Height + 6)
+    End Sub
+
     Public ReadOnly Property cancelled() As Boolean
         Get
             Return _cancelled
@@ -60,10 +72,15 @@ Public Class SetDefaultsForm
         My.Settings.Shoreline_Uncertainty_Field = cmbUncertaintyField.SelectedItem
         My.Settings.Land_On_Right_Side = rad_right.Checked ' change settings
         My.Settings.Seaward = radSeaward.Checked
+        My.Settings.Baseline_ID_Field = cmbBaselineID.SelectedItem
         My.Settings.Baseline_Group_Field = cmbBaseGroup.SelectedItem
         My.Settings.search_distance_field = cmbBaselineSearchDistance.SelectedItem
         My.Settings.Shoreline_Type_Field = cmbShorelineTypeField.SelectedItem
         My.Settings.Shoreline_Uncertainty_Table = cmbLidar.SelectedItem
+
+        If rbCastBoth.Checked Then My.Settings.CastDirection = "BOTH"
+        If rbCastOnShore.Checked Then My.Settings.CastDirection = "ONSHORE"
+        If rbCastOffShore.Checked Then My.Settings.CastDirection = "OFFSHORE"
 
         ' Save any changes on metadata settings tab
         Metadata.SaveMetadataTab(Me)
@@ -135,15 +152,11 @@ Public Class SetDefaultsForm
             'populate baseline and shoreline feature class combo boxes with 
             'feature class names
             For Each lyr As IFeatureLayer In MapUtility.featureLayers("baseline")
-                If Not GeoDB.layerIsValid(lyr, "transect", True) Then
-                    cmbBaselineFC.Items.Add(lyr.Name)
-                End If
+                cmbBaselineFC.Items.Add(lyr.Name)
             Next
 
             For Each lyr As IFeatureLayer In MapUtility.featureLayers("shoreline")
-                If Not GeoDB.layerIsValid(lyr, "transect", True) Then
-                    cmbShorelineFC.Items.Add(lyr.Name)
-                End If
+                cmbShorelineFC.Items.Add(lyr.Name)
             Next
 
             For Each tbl As IStandaloneTable In MapUtility.uncertaintyTables()
@@ -154,6 +167,7 @@ Public Class SetDefaultsForm
             cmbBaselineFC.SelectedItem = My.Settings.Baseline_Feature_Layer
             cmbShorelineFC.SelectedItem = My.Settings.Shoreline_Feature_Layer
 
+            cmbBaselineID.SelectedItem = My.Settings.Baseline_ID_Field
             cmbBaseGroup.SelectedItem = My.Settings.Baseline_Group_Field
             cmbBaselineSearchDistance.SelectedItem = My.Settings.search_distance_field
             cmbDateField.SelectedItem = My.Settings.Shoreline_Date_Field
@@ -162,6 +176,10 @@ Public Class SetDefaultsForm
             cmbLidar.SelectedItem = My.Settings.Shoreline_Uncertainty_Table
 
             If My.Settings.Uncertainty > 0.0 Then txtDefaultUncertainty.Double = My.Settings.Uncertainty
+
+            rbCastBoth.Checked = (My.Settings.CastDirection = "BOTH")
+            rbCastOnShore.Checked = (My.Settings.CastDirection = "ONSHORE")
+            rbCastOffShore.Checked = (My.Settings.CastDirection = "OFFSHORE")
 
             helpButtonLandDirection.Location = New Drawing.Point(lblLandRelToBlOrientation.Location.X + lblLandRelToBlOrientation.Width + 5, helpButtonLandDirection.Location.Y)
             helpButtonVisualizeBaselineOrientation.Location = New Drawing.Point(chkVisualizeBaselineOrientation.Location.X + chkVisualizeBaselineOrientation.Width + 5, helpButtonVisualizeBaselineOrientation.Location.Y)
@@ -219,6 +237,7 @@ Public Class SetDefaultsForm
         Dim fld As IField
 
         'clear the combo boxes
+        Me.cmbBaselineID.Items.Clear()
         Me.cmbBaseGroup.Items.Clear()
         Me.cmbBaselineSearchDistance.Items.Clear()
 
@@ -232,6 +251,7 @@ Public Class SetDefaultsForm
             'AE: It would be better if we pulled in types from DSAS_tables rather than hardwiring here.
             'Minor inconvenience as these won't change once agreed on.
             If fld.Type = esriFieldType.esriFieldTypeInteger OrElse fld.Type = esriFieldType.esriFieldTypeSmallInteger Then
+                Me.cmbBaselineID.Items.Add(fld.AliasName)
                 Me.cmbBaseGroup.Items.Add(fld.AliasName)
             End If
 
@@ -244,6 +264,9 @@ Public Class SetDefaultsForm
         Next
 
         'Try to use the previous value...
+        cmbBaselineID.SelectedItem = cmbBaselineID.Text
+        If cmbBaselineID.SelectedItem Is Nothing Then cmbBaselineID.Text = ""
+
         cmbBaseGroup.SelectedItem = cmbBaseGroup.Text
         If cmbBaseGroup.SelectedItem Is Nothing Then cmbBaseGroup.Text = ""
 
@@ -264,10 +287,6 @@ Public Class SetDefaultsForm
     Private Sub helpButtonLandDirection_Click(sender As Object, e As EventArgs) Handles helpButtonLandDirection.Click
         Dim helpFrm As LandRelatiToBaseliHelpForm = New LandRelatiToBaseliHelpForm()
         helpFrm.Show()
-    End Sub
-
-    Private Sub helpButtonSearchDistance_Click(sender As Object, e As EventArgs)
-        MsgBox("This optional value provides a maximum distance in meters that DSAS will search for shorelines, extending out from either side of the baseline. If you entered 50 meters, DSAS would search no more than 50 meters on either side of the baseline for shoreline data and any data beyond that would be ignored. This value can be useful when shoreline data that you do not want to incorporate into rate analysis is in close proximity to shoreline data that you do want to use. For example, if you are calculating shoreline change rates on an island, you can make sure shorelines on the opposite side of the island aren't included by setting a maximum search distance.", MsgBoxStyle.ApplicationModal, "Baseline Search Distance")
     End Sub
 
     Private Sub helpButtonVisualizeBaselineOrientation_Click(sender As Object, e As EventArgs) Handles helpButtonVisualizeBaselineOrientation.Click
@@ -381,7 +400,7 @@ Public Class SetDefaultsForm
         form.Show()
     End Sub
 
-    Private Sub baselineSearchDistanceHelpBtn_Click(sender As Object, e As EventArgs) Handles baselineSearchDistanceHelpBtn.Click
+    Private Sub helpButtonBaselineSearchDistance_Click(sender As Object, e As EventArgs) Handles helpButtonBaselineSearchDistance.Click
         Dim popup As New PopupWithImage
         popup.Text = "Baseline Search Distance Field"
         'popup.textArea.Font.Size =
@@ -420,7 +439,11 @@ Public Class SetDefaultsForm
         MsgBox("The uncertainty table contains data associated with performing the proxy-datum bias correction between the datum-based Operational Mean High Water shorelines typically derived from lidar data and the High Water Line shorelines from other sources such as T-sheets. The table must contain the profile identification field used to linear reference the table to the shoreline data, the proxy datum bias used to correct the HWL shoreline distances on each transect to the MHW datum, the uncertainty associated with the bias, and the positional uncertainty associated with the lidar shoreline from which the bias data were derived.", MsgBoxStyle.ApplicationModal, "Uncertainty Table")
     End Sub
 
-    Private Sub helpButtonShorelineType_Click(sender As Object, e As EventArgs) Handles helpButtonShorelineType.Click
+    Private Sub helpButtonBaselineID_Click(sender As Object, e As EventArgs) Handles helpButtonBaselineID.Click
+        MsgBox("The baseline ID field is required by DSAS. DSAS uses this value to determine the ordering sequence of transects when the baseline feature class contains multiple segments. If this attribute field is created prior to drawing baseline segments, the ID value defaults to zero. The attribute table must be edited and a unique ID value designated for each segment of the baseline. It is recommended to organize baseline segment IDs in order alongshore. DSAS will not cast transects along baseline segments where the ID value is zero.", MsgBoxStyle.ApplicationModal, "Baseline ID Field")
+    End Sub
 
+    Private Sub btnHelpXectRelativeToBl_Click(sender As Object, e As EventArgs) Handles btnHelpXectRelativeToBl.Click
+        MsgBox("DSAS v5.0 supports a baseline located anywhere (offshore, onshore, or in the middle of the shoreline data). As a result of this DSAS will search by default from either side of the baseline for shoreline data and extend transects to a length that intersects all shoreline data within range. If, however, the baseline is known to be entirely on one side of the data, (onshore or offshore), the user may select from the options below and DSAS will only search on one side of the baseline.", MsgBoxStyle.ApplicationModal, "Transect Casting")
     End Sub
 End Class

@@ -56,7 +56,7 @@ Module LegacyTransectConverter
                     geom.AddPoint(pt, 0) ' Addes at the beginning - at index 0
                 End If
 
-                clipToShorelineEnvelope(geom, getXectBaselinePoint(geom))
+                If My.Settings.ClipTransectsToShorelineExtent Then clipToShorelineEnvelope(geom)
 
                 Dim v5feat As IFeature = v5fc.CreateFeature
                 With v5feat

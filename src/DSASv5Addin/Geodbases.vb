@@ -127,10 +127,15 @@ Public Class GeoDB
 
     End Function
 
-    '
-    'create a object class, table inside a workspace
-    '
-    Public Shared Function CreateWorkspaceTableAndAddToTOC(tableName As String, tblGenericName As String, tablePrefix As String) As Boolean
+    ''' <summary>
+    ''' create a object class, table inside a workspace
+    ''' </summary>
+    ''' <param name="tableName"></param>
+    ''' <param name="tblGenericName"></param>
+    ''' <param name="tablePrefix"></param>
+    ''' <returns></returns>
+    ''' <remarks>This does not currently handle the case where the table already exists like its sister CreateWorkspaceFeatureClassAndAddToTOC does.</remarks>
+    Public Shared Function CreateWorkspaceTableAndAddToTOC(tableName As String, tblGenericName As String, tablePrefix As String) As ITable
         Dim featWs As IFeatureWorkspace = Nothing
         Dim ws2 As IWorkspace2 = Nothing
         Dim tbl As ITable = Nothing
@@ -145,7 +150,7 @@ Public Class GeoDB
             'check if  workspace is empty
             If featWs Is Nothing Then
                 DSASUtility.log(TraceLevel.Error, "Feature Workspace is Nothing")
-                Return False
+                Return Nothing
             End If
             'check if object class already exists
             If ws2.NameExists(esriDatasetType.esriDTTable, tableName) Then
@@ -157,7 +162,7 @@ Public Class GeoDB
                     DSASUtility.log(TraceLevel.Info, "Deleted " + tableName + " table.")
                 Else
                     DSASUtility.log(TraceLevel.Error, "Could not delete " + tableName + " table.")
-                    Return False
+                    Return Nothing
                 End If
             End If
 
@@ -170,12 +175,12 @@ Public Class GeoDB
             tbl = featWs.CreateTable(tableName, m_flds, pCLSID, Nothing, "")
             If tbl Is Nothing Then
                 log(TraceLevel.Error, tableName + " table could not be created!")
-                Return False
+                Return Nothing
             End If
             MapUtility.AddTableToToc(tbl)
 
             tables(tblGenericName) = tbl
-            Return True
+            Return tbl
         Finally
             ws2 = Nothing
             featWs = Nothing
@@ -223,7 +228,7 @@ Public Class GeoDB
             Dim fld As Hashtable = DirectCast(entry.Value, Hashtable)
             log(fld("name").ToString)
             Dim fldOption As String = fld("option").ToString
-            If fldOption = "" OrElse fldOption = "USER" OrElse fldOption = "GROUP" OrElse (fldOption = "BIAS" And applyBias) Then
+            If fldOption = "" OrElse fldOption = "USER" OrElse fldOption = "GROUP" OrElse (fldOption = "BIAS" And applyBias) OrElse fldOption = "OUTPUT" Then
                 Dim fldName As String = finalizeFieldName(fld("name").ToString)
                 Dim fldTyp As esriFieldType = fieldName2Type(fld("type").ToString.Split(","c)(0))
                 Dim geomDef As IGeometryDef
@@ -686,13 +691,23 @@ Public Class GeoDB
 
     End Function
 
-    Shared Function layerIsValid(ByVal lyr As IFeatureLayer, ByVal lyrGenericName As String, Optional ByVal detectionMode As Boolean = False) As Boolean
+
+    Shared Function listFromCsv(csv As Object) As List(Of String)
+        listFromCsv = New List(Of String)
+        listFromCsv.AddRange(csv.ToString.Trim.Split(","c))
+        If listFromCsv.Item(0) = "" Then listFromCsv.RemoveAt(0)
+    End Function
+
+
+    Shared Function layerIsValid(ByVal lyr As IFeatureLayer, ByVal lyrGenericName As String, Optional ByVal mode As DSAS.layerCheckingMode = DSAS.layerCheckingMode.validation) As Boolean
         Try
+            Dim lyrName As String = lyr.Name
+            lyrGenericName = lyrGenericName.ToLower
             If lyr Is Nothing OrElse Not lyr.Valid Then Return False
 
             DSASUtility.log(TraceLevel.Info, "".PadLeft(40, "-"c))
-            If detectionMode Then
-                DSASUtility.log(TraceLevel.Info, "Detecting " + lyrGenericName + " layer: " + lyr.Name)
+            If mode = DSAS.layerCheckingMode.detection Then
+                DSASUtility.log(TraceLevel.Verbose, "Detecting " + lyrGenericName + " layer: " + lyr.Name)
             Else
                 DSASUtility.log(TraceLevel.Info, "Validating " + lyrGenericName + " layer: " + lyr.Name)
             End If
@@ -701,58 +716,71 @@ Public Class GeoDB
             For Each fld As Hashtable In fields.Values
 
                 Dim fldName As String = fld("name").ToString
-                If Not detectionMode Then DSASUtility.log(TraceLevel.Verbose, "Finding field: " + fldName)
-                Dim fldOption As String = fld("option").ToString.Trim
+                If mode = DSAS.layerCheckingMode.validation Then DSASUtility.log(TraceLevel.Verbose, "Finding field: " + fldName)
+                Dim fldOptionList = listFromCsv(fld("option"))
                 ' If the field name is user specified, get the name from settings
-                If fldOption = "USER" Then
+                If fldOptionList.Contains("USER") Then
                     'Check to see if we can find the field name from user settings
                     fldName = DSASUtility.nv(My.Settings(String.Join("_", New String() {lyrGenericName, fldName, "field"})), "").ToString
                 End If
-                Dim fldTypes As String() = fld("type").ToString.Split(","c)
+                Dim fldTypes = listFromCsv(fld("type"))
                 Dim fldIdx As Integer = GetFieldIndex(lyr, fldName)
                 fld("idx") = fldIdx
                 If fldIdx = -1 Then
                     'If this was a user specified field that wasn't selected, use the generic field name
-                    'AE: Handle this some other way
                     fldName = IIf(fldName.Trim = "", fld("name"), fldName).ToString
                     ' If a field is not found, fail if the field is not optional
-                    'AE: Handle optional user fields (group)
-                    'OrElse (fldOption = "USER" AndAlso lyrGenericName = "baseline" AndAlso My.Settings.Baseline_Group_Field IsNot Nothing AndAlso fldName.ToLower = My.Settings.Baseline_Group_Field.ToLower) _
-                    'OrElse (fldOption = "USER" AndAlso lyrGenericName = "shoreline" AndAlso My.Settings.Shoreline_Type_Field IsNot Nothing AndAlso fldName.ToLower = My.Settings.Shoreline_Type_Field.ToLower) _
-                    If fldOption = "" _
-                        OrElse (fldOption = "USER" AndAlso lyrGenericName = "shoreline" AndAlso My.Settings.Shoreline_Date_Field IsNot Nothing AndAlso fldName.ToLower = My.Settings.Shoreline_Date_Field.ToLower) _
-                        Then
-                        If Not detectionMode Then DSASUtility.log(TraceLevel.Error, "Required field not found in " + lyrGenericName + " layer: " + lyr.Name + "." + fldName)
-                        Return False
-                    Else
-                        If Not detectionMode Then DSASUtility.log(TraceLevel.Info, "Optional field not found: " + fldName)
+                    If mode = DSAS.layerCheckingMode.detection Then
+                        If fldOptionList.Count = 0 Then
+                            Return False
+                        End If
+                    Else    ' validation
+                        If fldOptionList.Contains("USER") AndAlso (
+                            (lyrGenericName = "baseline" AndAlso My.Settings.Baseline_ID_Field IsNot Nothing AndAlso fldName.ToLower = My.Settings.Baseline_ID_Field.ToLower) OrElse
+                            (lyrGenericName = "baseline" AndAlso My.Settings.Baseline_Group_Field IsNot Nothing AndAlso fldName.ToLower = My.Settings.Baseline_Group_Field.ToLower) OrElse
+                            (lyrGenericName = "shoreline" AndAlso My.Settings.Shoreline_Date_Field IsNot Nothing AndAlso fldName.ToLower = My.Settings.Shoreline_Date_Field.ToLower) OrElse
+                            (lyrGenericName = "shoreline" AndAlso My.Settings.Shoreline_Uncertainty_Field IsNot Nothing AndAlso fldName.ToLower = My.Settings.Shoreline_Uncertainty_Field.ToLower) OrElse
+                            (lyrGenericName = "shoreline" AndAlso My.Settings.Shoreline_Type_Field IsNot Nothing AndAlso fldName.ToLower = My.Settings.Shoreline_Type_Field.ToLower)
+                            ) Then
+                            DSASUtility.log(TraceLevel.Error, "Optional field not found in " + lyrGenericName + " layer: " + lyr.Name + "." + fldName)
+                            Return False
+                        ElseIf fldOptionList.Count = 0 Then
+                            DSASUtility.log(TraceLevel.Error, "Required field not found in " + lyrGenericName + " layer: " + lyr.Name + "." + fldName)
+                            Return False
+                        End If
                     End If
                 Else
-                    If Not detectionMode Then DSASUtility.log(TraceLevel.Verbose, "Field found: " + fldName)
+                    If mode = DSAS.layerCheckingMode.validation Then DSASUtility.log(TraceLevel.Verbose, "Field found: " + fldName)
 
-                    If Not detectionMode Then DSASUtility.log(TraceLevel.Verbose, "Confirming field type: " + fldName)
+                    If mode = DSAS.layerCheckingMode.validation Then DSASUtility.log(TraceLevel.Verbose, "Confirming field type: " + fldName)
                     'AE: Handle multiple types
-                    If System.Array.IndexOf(fldTypes, fieldType2Name(GetFieldType(lyr, fldIdx))) = -1 Then
-                        If Not detectionMode Then _
-                            log(TraceLevel.Error, fldName + " field in " + lyr.Name _
-                                + " layer should be of type " + String.Join(", ", fldTypes))
+                    If Not fldTypes.Contains(fieldType2Name(GetFieldType(lyr, fldIdx))) Then
+                        Dim msg = fldName + " field in " + lyr.Name + " layer should be of type " + String.Join(", ", fldTypes)
+                        If mode = DSAS.layerCheckingMode.validation Then
+                            log(TraceLevel.Error, msg)
+                        Else
+                            log(TraceLevel.Verbose, msg)
+                        End If
                         Return False
                     ElseIf ("esriFieldType" + fldTypes(0)).ToUpper = esriFieldType.esriFieldTypeGeometry.ToString.ToUpper Then
-                        Dim geomTypes As String() = fld("geometry").ToString.Split(","c)
-                        If System.Array.IndexOf(geomTypes, geometryType2Name(lyr.FeatureClass.ShapeType)) = -1 Then
-                            If Not detectionMode Then _
-                                log(TraceLevel.Error, lyrGenericName + " layer " + lyr.Name + " layer should have " +
-                                    String.Join(" or ", geomTypes) + " geometry")
+                        Dim geomTypes = listFromCsv(fld("geometry"))
+                        If Not geomTypes.Contains(geometryType2Name(lyr.FeatureClass.ShapeType)) Then
+                            Dim msg = lyrGenericName + " layer " + lyr.Name + " layer should have " + String.Join(" or ", geomTypes) + " geometry"
+                            If mode = DSAS.layerCheckingMode.validation Then
+                                log(TraceLevel.Error, msg)
+                            Else
+                                log(TraceLevel.Verbose, msg)
+                            End If
                             Return False
                         Else
-                            If Not detectionMode Then DSASUtility.log(TraceLevel.Verbose, "Confirmed Layer Geometry.......................")
+                            If mode = DSAS.layerCheckingMode.validation Then DSASUtility.log(TraceLevel.Verbose, "Confirmed Layer Geometry.......................")
                         End If
                     End If
                 End If
             Next
             Return True
         Catch ex As Exception
-            If Not detectionMode Then DSASUtility.log(TraceLevel.Error, "Unexpected error while validating " + lyrGenericName + " layer: " + lyr.Name)
+            If mode = DSAS.layerCheckingMode.validation Then DSASUtility.log(TraceLevel.Error, "Unexpected error while validating " + lyrGenericName + " layer: " + lyr.Name)
             Return False
         Finally
             DSASUtility.log(TraceLevel.Info, "".PadLeft(40, "-"c))
@@ -806,7 +834,7 @@ Public Class GeoDB
 
     Shared Function tblFldInfo(ByVal fldName As String, ByVal tblGenericName As String) As Hashtable
         Try
-            Return DirectCast(DirectCast(DirectCast(DSAS.Instance.dsasTables(tblGenericName), Hashtable)("fields"), Hashtable)(fldName.ToLower), Hashtable)
+            Return DirectCast(DirectCast(DirectCast(DSAS.Instance.dsasTables(tblGenericName.ToLower), Hashtable)("fields"), Hashtable)(fldName.ToLower), Hashtable)
         Catch
             DSASUtility.log(TraceLevel.Error, "Can't find: " + tblGenericName + "." + fldName)
         End Try

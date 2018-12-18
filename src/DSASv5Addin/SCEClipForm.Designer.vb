@@ -77,9 +77,9 @@ Partial Class SCEClipForm
         Me.lblDummy.AutoSize = True
         Me.lblDummy.Location = New System.Drawing.Point(9, 15)
         Me.lblDummy.Name = "lblDummy"
-        Me.lblDummy.Size = New System.Drawing.Size(220, 13)
+        Me.lblDummy.Size = New System.Drawing.Size(200, 13)
         Me.lblDummy.TabIndex = 9
-        Me.lblDummy.Text = "Select transect layer to create a clipped copy"
+        Me.lblDummy.Text = "Select rate layer to create a clipped copy"
         '
         'btnScaleToMyData
         '

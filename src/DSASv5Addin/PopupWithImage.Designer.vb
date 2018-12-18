@@ -22,6 +22,7 @@ Partial Class PopupWithImage
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PopupWithImage))
         Me.Button1 = New System.Windows.Forms.Button()
         Me.pictureBox = New System.Windows.Forms.PictureBox()
         Me.textArea = New System.Windows.Forms.TextBox()
@@ -66,9 +67,9 @@ Partial Class PopupWithImage
         Me.Controls.Add(Me.pictureBox)
         Me.Controls.Add(Me.Button1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "PopupWithImage"
         Me.Padding = New System.Windows.Forms.Padding(10)
-        Me.ShowIcon = False
         CType(Me.pictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()

@@ -110,8 +110,8 @@ Partial Class LandRelatiToBaseliHelpForm
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.textArea)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "LandRelatiToBaseliHelpForm"
-        Me.ShowIcon = False
         Me.Text = "Location of Land Relative to Baseline Orientation"
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()

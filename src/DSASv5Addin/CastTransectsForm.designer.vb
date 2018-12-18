@@ -29,6 +29,8 @@ Partial Class CastTransectsForm
         Me.txtPersonalDb = New System.Windows.Forms.TextBox()
         Me.btnOpenGeodatabase = New System.Windows.Forms.Button()
         Me.gbCasting = New System.Windows.Forms.GroupBox()
+        Me.chkClipTransectsToShorelineExtent = New System.Windows.Forms.CheckBox()
+        Me.helpButtonClipTransectsToShorelineExtent = New System.Windows.Forms.PictureBox()
         Me.pbSmoothDistance0 = New System.Windows.Forms.PictureBox()
         Me.pbSmoothDistance500 = New System.Windows.Forms.PictureBox()
         Me.pbSmoothDistance2500 = New System.Windows.Forms.PictureBox()
@@ -54,6 +56,8 @@ Partial Class CastTransectsForm
         Me.tcTransect = New System.Windows.Forms.TabControl()
         Me.tpCast = New System.Windows.Forms.TabPage()
         Me.tcUpgrade = New System.Windows.Forms.TabPage()
+        Me.chkClipLegacyTransectsToShorelineExtent = New System.Windows.Forms.CheckBox()
+        Me.helpButtonClipLegacyTransectsToShorelineExtent = New System.Windows.Forms.PictureBox()
         Me.btnUpgradeTransectLayerHelp = New System.Windows.Forms.PictureBox()
         Me.gbBaselineType = New System.Windows.Forms.GroupBox()
         Me.rbOffshore = New System.Windows.Forms.RadioButton()
@@ -62,8 +66,10 @@ Partial Class CastTransectsForm
         Me.btnCancel2 = New System.Windows.Forms.Button()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.cbUpgradeCandidates = New System.Windows.Forms.ComboBox()
+        Me.txtTransectSpacingLegacy = New System.Windows.Forms.Label()
         Me.GroupBox1.SuspendLayout()
         Me.gbCasting.SuspendLayout()
+        CType(Me.helpButtonClipTransectsToShorelineExtent, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pbSmoothDistance0, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pbSmoothDistance500, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pbSmoothDistance2500, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -78,6 +84,7 @@ Partial Class CastTransectsForm
         Me.tcTransect.SuspendLayout()
         Me.tpCast.SuspendLayout()
         Me.tcUpgrade.SuspendLayout()
+        CType(Me.helpButtonClipLegacyTransectsToShorelineExtent, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.btnUpgradeTransectLayerHelp, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gbBaselineType.SuspendLayout()
         Me.SuspendLayout()
@@ -130,6 +137,8 @@ Partial Class CastTransectsForm
         '
         'gbCasting
         '
+        Me.gbCasting.Controls.Add(Me.chkClipTransectsToShorelineExtent)
+        Me.gbCasting.Controls.Add(Me.helpButtonClipTransectsToShorelineExtent)
         Me.gbCasting.Controls.Add(Me.pbSmoothDistance0)
         Me.gbCasting.Controls.Add(Me.pbSmoothDistance500)
         Me.gbCasting.Controls.Add(Me.pbSmoothDistance2500)
@@ -151,10 +160,34 @@ Partial Class CastTransectsForm
         Me.gbCasting.Controls.Add(Me.Label4)
         Me.gbCasting.Location = New System.Drawing.Point(6, 120)
         Me.gbCasting.Name = "gbCasting"
-        Me.gbCasting.Size = New System.Drawing.Size(409, 382)
+        Me.gbCasting.Size = New System.Drawing.Size(409, 422)
         Me.gbCasting.TabIndex = 1
         Me.gbCasting.TabStop = False
         Me.gbCasting.Text = "Casting"
+        '
+        'chkClipTransectsToShorelineExtent
+        '
+        Me.chkClipTransectsToShorelineExtent.AutoSize = True
+        Me.chkClipTransectsToShorelineExtent.Checked = True
+        Me.chkClipTransectsToShorelineExtent.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkClipTransectsToShorelineExtent.Location = New System.Drawing.Point(17, 399)
+        Me.chkClipTransectsToShorelineExtent.Name = "chkClipTransectsToShorelineExtent"
+        Me.chkClipTransectsToShorelineExtent.Size = New System.Drawing.Size(178, 17)
+        Me.chkClipTransectsToShorelineExtent.TabIndex = 33
+        Me.chkClipTransectsToShorelineExtent.Text = "Clip transects to shoreline extent"
+        Me.chkClipTransectsToShorelineExtent.UseVisualStyleBackColor = True
+        '
+        'helpButtonClipTransectsToShorelineExtent
+        '
+        Me.helpButtonClipTransectsToShorelineExtent.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.helpButtonClipTransectsToShorelineExtent.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.helpButtonClipTransectsToShorelineExtent.Image = Global.DSASAddin.My.Resources.Resources.question_mark_gray
+        Me.helpButtonClipTransectsToShorelineExtent.Location = New System.Drawing.Point(201, 395)
+        Me.helpButtonClipTransectsToShorelineExtent.Name = "helpButtonClipTransectsToShorelineExtent"
+        Me.helpButtonClipTransectsToShorelineExtent.Size = New System.Drawing.Size(25, 21)
+        Me.helpButtonClipTransectsToShorelineExtent.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.helpButtonClipTransectsToShorelineExtent.TabIndex = 34
+        Me.helpButtonClipTransectsToShorelineExtent.TabStop = False
         '
         'pbSmoothDistance0
         '
@@ -385,7 +418,8 @@ Partial Class CastTransectsForm
         '
         'btnOK
         '
-        Me.btnOK.Location = New System.Drawing.Point(340, 506)
+        Me.btnOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnOK.Location = New System.Drawing.Point(340, 548)
         Me.btnOK.Name = "btnOK"
         Me.btnOK.Size = New System.Drawing.Size(75, 23)
         Me.btnOK.TabIndex = 2
@@ -394,7 +428,8 @@ Partial Class CastTransectsForm
         '
         'btnCancel
         '
-        Me.btnCancel.Location = New System.Drawing.Point(259, 506)
+        Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnCancel.Location = New System.Drawing.Point(259, 548)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(75, 23)
         Me.btnCancel.TabIndex = 3
@@ -407,12 +442,15 @@ Partial Class CastTransectsForm
         '
         'tcTransect
         '
+        Me.tcTransect.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tcTransect.Controls.Add(Me.tpCast)
         Me.tcTransect.Controls.Add(Me.tcUpgrade)
         Me.tcTransect.Location = New System.Drawing.Point(2, 3)
         Me.tcTransect.Name = "tcTransect"
         Me.tcTransect.SelectedIndex = 0
-        Me.tcTransect.Size = New System.Drawing.Size(429, 558)
+        Me.tcTransect.Size = New System.Drawing.Size(429, 600)
         Me.tcTransect.TabIndex = 4
         '
         'tpCast
@@ -424,13 +462,16 @@ Partial Class CastTransectsForm
         Me.tpCast.Location = New System.Drawing.Point(4, 22)
         Me.tpCast.Name = "tpCast"
         Me.tpCast.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpCast.Size = New System.Drawing.Size(421, 532)
+        Me.tpCast.Size = New System.Drawing.Size(421, 574)
         Me.tpCast.TabIndex = 0
         Me.tpCast.Text = "Cast Transects"
         Me.tpCast.UseVisualStyleBackColor = True
         '
         'tcUpgrade
         '
+        Me.tcUpgrade.Controls.Add(Me.txtTransectSpacingLegacy)
+        Me.tcUpgrade.Controls.Add(Me.chkClipLegacyTransectsToShorelineExtent)
+        Me.tcUpgrade.Controls.Add(Me.helpButtonClipLegacyTransectsToShorelineExtent)
         Me.tcUpgrade.Controls.Add(Me.btnUpgradeTransectLayerHelp)
         Me.tcUpgrade.Controls.Add(Me.gbBaselineType)
         Me.tcUpgrade.Controls.Add(Me.btnUpgrade)
@@ -440,10 +481,34 @@ Partial Class CastTransectsForm
         Me.tcUpgrade.Location = New System.Drawing.Point(4, 22)
         Me.tcUpgrade.Name = "tcUpgrade"
         Me.tcUpgrade.Padding = New System.Windows.Forms.Padding(3)
-        Me.tcUpgrade.Size = New System.Drawing.Size(421, 532)
+        Me.tcUpgrade.Size = New System.Drawing.Size(421, 574)
         Me.tcUpgrade.TabIndex = 1
         Me.tcUpgrade.Text = "Upgrade Transect Layer"
         Me.tcUpgrade.UseVisualStyleBackColor = True
+        '
+        'chkClipLegacyTransectsToShorelineExtent
+        '
+        Me.chkClipLegacyTransectsToShorelineExtent.AutoSize = True
+        Me.chkClipLegacyTransectsToShorelineExtent.Checked = True
+        Me.chkClipLegacyTransectsToShorelineExtent.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkClipLegacyTransectsToShorelineExtent.Location = New System.Drawing.Point(15, 142)
+        Me.chkClipLegacyTransectsToShorelineExtent.Name = "chkClipLegacyTransectsToShorelineExtent"
+        Me.chkClipLegacyTransectsToShorelineExtent.Size = New System.Drawing.Size(178, 17)
+        Me.chkClipLegacyTransectsToShorelineExtent.TabIndex = 35
+        Me.chkClipLegacyTransectsToShorelineExtent.Text = "Clip transects to shoreline extent"
+        Me.chkClipLegacyTransectsToShorelineExtent.UseVisualStyleBackColor = True
+        '
+        'helpButtonClipLegacyTransectsToShorelineExtent
+        '
+        Me.helpButtonClipLegacyTransectsToShorelineExtent.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.helpButtonClipLegacyTransectsToShorelineExtent.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.helpButtonClipLegacyTransectsToShorelineExtent.Image = Global.DSASAddin.My.Resources.Resources.question_mark_gray
+        Me.helpButtonClipLegacyTransectsToShorelineExtent.Location = New System.Drawing.Point(199, 138)
+        Me.helpButtonClipLegacyTransectsToShorelineExtent.Name = "helpButtonClipLegacyTransectsToShorelineExtent"
+        Me.helpButtonClipLegacyTransectsToShorelineExtent.Size = New System.Drawing.Size(25, 21)
+        Me.helpButtonClipLegacyTransectsToShorelineExtent.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.helpButtonClipLegacyTransectsToShorelineExtent.TabIndex = 36
+        Me.helpButtonClipLegacyTransectsToShorelineExtent.TabStop = False
         '
         'btnUpgradeTransectLayerHelp
         '
@@ -461,7 +526,7 @@ Partial Class CastTransectsForm
         '
         Me.gbBaselineType.Controls.Add(Me.rbOffshore)
         Me.gbBaselineType.Controls.Add(Me.rbOnshore)
-        Me.gbBaselineType.Location = New System.Drawing.Point(9, 73)
+        Me.gbBaselineType.Location = New System.Drawing.Point(9, 108)
         Me.gbBaselineType.Name = "gbBaselineType"
         Me.gbBaselineType.Size = New System.Drawing.Size(406, 48)
         Me.gbBaselineType.TabIndex = 7
@@ -493,7 +558,7 @@ Partial Class CastTransectsForm
         'btnUpgrade
         '
         Me.btnUpgrade.Enabled = False
-        Me.btnUpgrade.Location = New System.Drawing.Point(340, 152)
+        Me.btnUpgrade.Location = New System.Drawing.Point(340, 178)
         Me.btnUpgrade.Name = "btnUpgrade"
         Me.btnUpgrade.Size = New System.Drawing.Size(75, 23)
         Me.btnUpgrade.TabIndex = 5
@@ -502,7 +567,7 @@ Partial Class CastTransectsForm
         '
         'btnCancel2
         '
-        Me.btnCancel2.Location = New System.Drawing.Point(259, 152)
+        Me.btnCancel2.Location = New System.Drawing.Point(259, 178)
         Me.btnCancel2.Name = "btnCancel2"
         Me.btnCancel2.Size = New System.Drawing.Size(75, 23)
         Me.btnCancel2.TabIndex = 4
@@ -526,11 +591,21 @@ Partial Class CastTransectsForm
         Me.cbUpgradeCandidates.Size = New System.Drawing.Size(406, 21)
         Me.cbUpgradeCandidates.TabIndex = 0
         '
+        'txtTransectSpacingLegacy
+        '
+        Me.txtTransectSpacingLegacy.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtTransectSpacingLegacy.AutoSize = True
+        Me.txtTransectSpacingLegacy.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!)
+        Me.txtTransectSpacingLegacy.Location = New System.Drawing.Point(12, 77)
+        Me.txtTransectSpacingLegacy.Name = "txtTransectSpacingLegacy"
+        Me.txtTransectSpacingLegacy.Size = New System.Drawing.Size(0, 13)
+        Me.txtTransectSpacingLegacy.TabIndex = 37
+        '
         'CastTransectsForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(433, 562)
+        Me.ClientSize = New System.Drawing.Size(433, 604)
         Me.Controls.Add(Me.tcTransect)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -541,6 +616,7 @@ Partial Class CastTransectsForm
         Me.GroupBox1.PerformLayout()
         Me.gbCasting.ResumeLayout(False)
         Me.gbCasting.PerformLayout()
+        CType(Me.helpButtonClipTransectsToShorelineExtent, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.pbSmoothDistance0, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.pbSmoothDistance500, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.pbSmoothDistance2500, System.ComponentModel.ISupportInitialize).EndInit()
@@ -556,6 +632,7 @@ Partial Class CastTransectsForm
         Me.tpCast.ResumeLayout(False)
         Me.tcUpgrade.ResumeLayout(False)
         Me.tcUpgrade.PerformLayout()
+        CType(Me.helpButtonClipLegacyTransectsToShorelineExtent, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.btnUpgradeTransectLayerHelp, System.ComponentModel.ISupportInitialize).EndInit()
         Me.gbBaselineType.ResumeLayout(False)
         Me.gbBaselineType.PerformLayout()
@@ -601,4 +678,9 @@ Partial Class CastTransectsForm
     Friend WithEvents pbSmoothDistance100 As System.Windows.Forms.PictureBox
     Friend WithEvents pbSmoothDistance2500 As System.Windows.Forms.PictureBox
     Friend WithEvents pbSmoothDistance500 As System.Windows.Forms.PictureBox
+    Friend WithEvents chkClipTransectsToShorelineExtent As System.Windows.Forms.CheckBox
+    Friend WithEvents helpButtonClipTransectsToShorelineExtent As System.Windows.Forms.PictureBox
+    Friend WithEvents chkClipLegacyTransectsToShorelineExtent As System.Windows.Forms.CheckBox
+    Friend WithEvents helpButtonClipLegacyTransectsToShorelineExtent As System.Windows.Forms.PictureBox
+    Friend WithEvents txtTransectSpacingLegacy As System.Windows.Forms.Label
 End Class

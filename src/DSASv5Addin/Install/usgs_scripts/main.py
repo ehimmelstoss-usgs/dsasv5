@@ -16,8 +16,9 @@ global summary_report
 
 def init_summary_dict():
     global summary_dict
-    summary_dict = {'transectId': [], 'group': [],'EPR': [], 'EPRunc': [], 'SCE': [], 'NSM': [], 'TCD': [], 'fillFlag': [] }
-    summary_dict.update( {'LRR': [], 'LCI': [], 'WLR': [], 'WCI': [], 'dates': [], 'bias': [], 'biasUncy': []} )
+    summary_dict = {'transectId': [], 'group': [],'EPR': [], 'EPRunc': [], 'SCE': [], 'NSM': [], 
+                    'TCD': [], 'fillFlag': [], 'LRR': [], 'LCI': [], 'WLR': [], 'WCI': [],
+                    'dates': [], 'bias': [], 'biasUncy': [] }
 
 
 init_summary_dict()
@@ -131,6 +132,8 @@ def rateList():
 # afarris@usgs.gov 2017Dec15 now always calculate LRR so we will have data if we need it
 # afarris@usgs.gov 2017Dec19 if bias_flag = 0, but bias = 0, I now look for recent bias value I can use
 # afarris@usgs.gov 2018Feb08, fix another bias problem, the fix above was bootstrapping bias accross big gaps, now have fillFlag
+# afarris@usgs.gov 2018May09, fix another bias problem, now MHW, WDL shorelines will have values for bias_dist, bias_x, bias_y and bias_uncy
+# afarris@usgs.gov 2018jun01 made some changes suggested by code review 
 
 
 def runCalcs():
@@ -269,7 +272,8 @@ def calc(params):
             elif type[ii] == "MHW" or type[ii] == "WDL":
                 # data does not need to be shifted
                 # but I think I need a line of code or python gets upset
-                foo = 1
+                # foo = 1
+                continue
             else:
                 # throw exception, type has to be MHW or HWL
                 raise Exception('IPY: type has to be HWL, WDL or MHW, but is not for transect: ' + str(transect))
@@ -333,6 +337,7 @@ def calc(params):
                 rates.update (shoreChangeEnvelope(data))
                 summary_dict['SCE'].append( rates.get("SCE")  )
             #elif c == 'LRR':
+                 # LRR is always run (above), so I don't need to call it again.
                  # calculate linear regression
                  # rates.update(linreg(data))
                  # summary_dict['LRR'].append( rates.get("LRR") )
@@ -344,16 +349,11 @@ def calc(params):
                  summary_dict['WCI'].append( rates.get("WCI") )
 
     if bias_flag:
-        if bias != 0 :
-            # bias is being applied AND bias exists for this transect
-            rates.update(moveShoreline(data))
-            rates.update({'bias_uncertainty': uncyWBias })
-        else:
-            # no good bias data.
-            # put in None for the output from moveShoreline
-            rates.update({'bias_x': [None]*len(type), 'bias_y': [None]*len(type), 'bias': None, 'bias_distance': [None]*len(type)})
-            rates.update({'bias_uncertainty': [None]*len(type) })
-    
+        # I changed the code so that "moveShoreline" is always called, it will check for the potential lack of bias 
+        # it will also add bias uncy where appropriate
+        # afarris@usgs.gov 2018May09
+        rates.update(moveShoreline(data))
+            
     rates.update({'uncertainty': uncyNoBias} )
 
     return (rates)

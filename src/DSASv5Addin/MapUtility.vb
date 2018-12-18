@@ -39,11 +39,9 @@ Public Class MapUtility
     Shared Function findFeatureLayer(ByVal lyrName As String, Optional ByVal layerGenericName As String = Nothing) As IFeatureLayer
         If lyrName Is Nothing Then Return Nothing
 
-        For Each lyr As IFeatureLayer In featureLayers()
+        For Each lyr As IFeatureLayer In featureLayers(layerGenericName)
             If lyr.Name.ToUpper = lyrName.ToUpper Then
-                If layerGenericName Is Nothing OrElse GeoDB.layerIsValid(lyr, layerGenericName, True) Then
-                    Return lyr
-                End If
+                Return lyr
             End If
         Next
 
@@ -104,8 +102,20 @@ Public Class MapUtility
                     End If
                     If featLyr.Valid Then
                         If GeoDB.isInPersonalGeodatabaseWorkspace(featLyr) Then
-                            If layerGenericName Is Nothing OrElse GeoDB.layerIsValid(featLyr, layerGenericName, True) Then
+                            If layerGenericName Is Nothing Then
                                 Yield featLyr
+                            ElseIf GeoDB.layerIsValid(featLyr, layerGenericName, DSAS.layerCheckingMode.detection) Then
+                                If _
+                                (layerGenericName = "baseline" OrElse layerGenericName = "shoreline") AndAlso (
+                                    GeoDB.layerIsValid(featLyr, "transect", DSAS.layerCheckingMode.detection) OrElse
+                                    GeoDB.layerIsValid(featLyr, "transectv4", DSAS.layerCheckingMode.detection) OrElse
+                                    GeoDB.layerIsValid(featLyr, "rates", DSAS.layerCheckingMode.detection) OrElse
+                                    GeoDB.layerIsValid(featLyr, "forecast", DSAS.layerCheckingMode.detection) OrElse
+                                    featLyr.Name.StartsWith("record_")) Then
+                                    'skip
+                                Else
+                                    Yield featLyr
+                                End If
                             End If
                         End If
                     End If

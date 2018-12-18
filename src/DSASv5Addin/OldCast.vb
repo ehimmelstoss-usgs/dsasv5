@@ -154,6 +154,9 @@ Module OldCast
 
             TransectLyrToolCtl.addSelectLayer(xectLayer)
 
+            'refresh the display
+            My.Document.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, Nothing, Nothing)
+
             Dim msg As String = String.Format("Transect Layer '{0}' has been created and is now selected in the DSAS transect layer drop down. If you manually edit transects, please remember to select the layer before starting the edit session so that DSAS can check your edits.", frm.m_transectName)
             log(msg)
             MsgBox(msg,, DSAS.MsgBoxTitle)

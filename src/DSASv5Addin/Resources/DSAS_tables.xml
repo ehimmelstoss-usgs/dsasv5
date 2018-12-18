@@ -64,13 +64,13 @@
 	-->
 	<TABLE name="baseline">
 		<FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Polyline" length="0" precision="0" scale="0" option="" />
-		<FIELD name="ID" alias="" type="Integer,SmallInteger" geometry="" length="" precision="" scale="" option="" />
+		<FIELD name="ID" alias="" type="Integer,SmallInteger" geometry="" length="" precision="" scale="" option="USER" />
 		<FIELD name="Group" alias="" type="Integer,SmallInteger" geometry="" length="8" precision="8" scale="0" option="USER" />
 	</TABLE>
 	<TABLE name="shoreline">
 		<FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Polyline" length="0" precision="0" scale="0" option="" />
 		<FIELD name="DATE" alias="" type="String" geometry="" length="10,22" precision="" scale="" option="USER" />
-    <FIELD name="TYPE" alias="" type="String" geometry="" length="10,22" precision="" scale="" option="USER" />
+    <FIELD name="TYPE" alias="" type="String" geometry="" length="10,22" precision="" scale="" option="USER,BIAS" />
     <FIELD name="UNCERTAINTY" alias="" type="SmallInteger,Integer,Single,Double" geometry="" length="" precision="" scale="" option="USER" />
 		<FIELD name="BIAS" alias="" type="Double" geometry="" length="" precision="" scale="" option="BIAS" />
 		<FIELD name="UNCERTAINTY_BIAS" alias="" type="SmallInteger,Integer,Single,Double" geometry="" length="" precision="" scale="" option="BIAS" />
@@ -87,7 +87,6 @@
   <TABLE name="TransectV4">
     <FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
     <FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Polyline" length="0" precision="0" scale="0" option="" />
-    <FIELD name="TransectID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="DELETE" />
     <FIELD name="BaselineID" alias="" type="Integer,SmallInteger" geometry="" length="8" precision="8" scale="0" option="" />
     <FIELD name="TransOrder" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
     <FIELD name="ProcTime" alias="" type="String" geometry="" length="30" precision="0" scale="0" option="" />
@@ -102,7 +101,8 @@
 		<FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
     <FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Point" length="0" precision="0" scale="0" option="" />
 		<FIELD name="TransectID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
-		<FIELD name="BaselineID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="TransOrder" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="OUTPUT" />
+    <FIELD name="BaselineID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
 		<FIELD name="ShorelineID" alias="" type="String" geometry="" length="22" precision="0" scale="0" option="" />
 		<FIELD name="Distance" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
 		<FIELD name="IntersectX" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
@@ -139,17 +139,30 @@
     <FIELD name="LCI%" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
     <FIELD name="LSE" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
   </TABLE>
-  <TABLE name="Forecast">
+  <TABLE name="forecast">
     <FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
     <FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Polyline" length="0" precision="0" scale="0" option="" />
     <FIELD name="ForecastPeriod" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
     <FIELD name="ForecastYear" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
   </TABLE>
-  <TABLE name="ForecastUncy">
+  <TABLE name="forecast_uncy">
     <FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
     <FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Polygon" length="0" precision="0" scale="0" option="" />
     <FIELD name="ForecastPeriod" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
     <FIELD name="ForecastYear" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+  </TABLE>
+  <TABLE name="forecast_points">
+    <FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />
+    <FIELD name="SHAPE" alias="geometry" type="Geometry" geometry="Point" length="0" precision="0" scale="0" option="" />
+    <FIELD name="ForecastPeriod" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="ForecastYear" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+    <FIELD name="Uncertainty" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+    <FIELD name="Distance" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+    <FIELD name="IntersectX" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+    <FIELD name="IntersectY" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
+    <FIELD name="TransectID" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="TransOrder" alias="" type="Integer" geometry="" length="8" precision="8" scale="0" option="" />
+    <FIELD name="TCD" alias="" type="Double" geometry="" length="10" precision="9" scale="2" option="" />
   </TABLE>
   <TABLE name="record">
     <FIELD name="OBJECTID" alias="object identifier" type="OID" geometry="" length="0" precision="0" scale="0" option="" />

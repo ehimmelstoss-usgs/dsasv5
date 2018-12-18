@@ -7,7 +7,9 @@ Public Class DoNotShowAgainForm
         ' Otherwise, show the dialog with given message
         Dim frm As New DoNotShowAgainForm
         frm.txtMessage.Text = message
+        frm.txtMessage.Select(0, 0)
         frm.mySettingName = settingName
+        frm.txtMessage.Size = New Drawing.Size(frm.btnOK.Location.X + frm.btnOK.Size.Width - frm.txtMessage.Location.X, frm.chkDoNotShowAgain.Location.Y - frm.txtMessage.Location.Y - frm.chkDoNotShowAgain.Height)
         frm.ShowDialog()
     End Sub
 

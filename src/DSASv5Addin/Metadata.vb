@@ -5,9 +5,12 @@ Imports ESRI.ArcGIS.RuntimeManager
 
 
 Module Metadata
-
+    ''' <summary>
+    ''' Check if the metadata fields have been filled out by the user
+    ''' </summary>
+    ''' <returns>True if all metadata fields have non-empty values, false otherwise</returns>
     Public Function checkForMetadataSetting() As Boolean
-        Dim mdFile As String = checkForMetadataTemplate()
+        Dim mdFile As String = getMetadataTemplateFilename()
         If mdFile Is Nothing Then Exit Function
 
         Dim mdDoc As XPathDocument
@@ -15,9 +18,6 @@ Module Metadata
         Try
             mdDoc = New XPathDocument(mdFile)
             mdNav = mdDoc.CreateNavigator()
-
-            ' If the user opted to turn off incomplete metadata check, do not bother.
-            If My.Settings.DoNotShowAgainCompleteMetadataSettings Then Return True
 
             ' We do not check for all metadata settings, some may not apply to all users.
             If _
@@ -28,13 +28,16 @@ Module Metadata
                 hasEmptyValue("//update", mdNav) OrElse
                 hasEmptyValue("//progress", mdNav) OrElse
                 hasEmptyValue("//accconst", mdNav) OrElse
-                (hasEmptyValue("//distrib/cntinfo/cntorgp/cntorg", mdNav) AndAlso hasEmptyValue("//distrib/cntinfo/cntorgp/cntper", mdNav)) OrElse
+                hasEmptyValue("//distrib/cntinfo/cntorgp/cntorg", mdNav) OrElse
+                hasEmptyValue("//distrib/cntinfo/cntorgp/cntper", mdNav) OrElse
                 hasEmptyValue("//distrib/cntinfo/cntaddr/address", mdNav) OrElse
                 hasEmptyValue("//distrib/cntinfo/cntaddr/city", mdNav) OrElse
-                hasEmptyValue("//distrib/cntinfo/cntaddr/state", mdNav) _
+                hasEmptyValue("//distrib/cntinfo/cntaddr/state", mdNav) OrElse
+                hasEmptyValue("//distrib/cntinfo/cntaddr/postal", mdNav) OrElse
+                hasEmptyValue("//distrib/cntinfo/cntvoice", mdNav) OrElse
+                hasEmptyValue("//distrib/cntinfo/cntemail", mdNav) _
             Then
-                DoNotShowAgainForm.prompt("Warning! DSAS encourages the user to provide some basic information about your data to be entered into the Metadata Settings tab before proceeding with casting transects and running rates of change. Please return to the Set Default Parameters button and make sure to complete ALL fields in the Metadata Settings tab. You may choose to proceed and suppress this message, but you will not be reminded of incomplete metadata again.", "DoNotShowAgainCompleteMetadataSettings")
-                Return False
+                Return MsgBox("Warning! DSAS encourages the user to provide some basic information in the Metadata Settings tab before proceeding with casting transects and running rates of change. Please click 'Cancel' to return to the Set Default Parameters window and complete all fields in the Metadata Settings tab. Or, click 'OK' to proceed with incomplete metadata.", MsgBoxStyle.OkCancel, DSAS.MsgBoxTitle) = MsgBoxResult.Ok
             End If
 
             Return True
@@ -44,32 +47,50 @@ Module Metadata
         End Try
     End Function
 
-
+    ''' <summary>
+    ''' Used to temporarily track which metadata synchronizers are enabled
+    ''' </summary>
     Dim wasSyncerEnabled As New Hashtable
 
+    ''' <summary>
+    ''' Disable all metadata synchronizers but the FGDC CSDGM metadata synchronizer.
+    ''' </summary>
     Private Sub setSyncers()
         Dim msm As IMetadataSynchronizerManager = getSingleton("esriGeodatabase.MetadataSynchronizer")
 
         For i As Integer = 0 To msm.NumSynchronizers - 1
             Dim ms As IMetadataSynchronizer = msm.GetSynchronizer(i)
-            wasSyncerEnabled(ms.Name) = msm.GetEnabled(i)
-            msm.SetEnabled(i, ms.Name = "FGDC CSDGM")
-            log(ms.Name)
-            log(msm.GetEnabled(i))
+            If ms Is Nothing Then
+                log(String.Format("Syncer {0} of {1} cannot be accessed. Ignoring...", i + 1, msm.NumSynchronizers))
+            Else
+                wasSyncerEnabled(ms.Name) = msm.GetEnabled(i)
+                msm.SetEnabled(i, ms.Name = "FGDC CSDGM")
+                log(ms.Name)
+                log(msm.GetEnabled(i))
+            End If
         Next
     End Sub
 
+    ''' <summary>
+    ''' Reset all metadata synchronizers to their prior state
+    ''' </summary>
     Private Sub resetSyncers()
         Dim msm As IMetadataSynchronizerManager = getSingleton("esriGeodatabase.MetadataSynchronizer")
 
         For i As Integer = 0 To msm.NumSynchronizers - 1
             Dim ms As IMetadataSynchronizer = msm.GetSynchronizer(i)
-            msm.SetEnabled(i, wasSyncerEnabled(ms.Name))
+            If ms IsNot Nothing Then
+                msm.SetEnabled(i, wasSyncerEnabled(ms.Name))
+            End If
         Next
     End Sub
 
 
-    ' Transform given metadata (assumed to be in ESRI ISO format) into FGDC and replace the original
+    ''' <summary>
+    ''' Transform given metadata (assumed to be in ESRI ISO format) into FGDC and replace the original
+    ''' </summary>
+    ''' <param name="mdSync"></param>
+    ''' <returns>FGDC CSDGM representation of the metadata</returns>
     Private Function slurp(ByVal mdSync As IXmlPropertySet2) As String
         Dim xslt As New Xml.Xsl.XslCompiledTransform
         Dim xSettings As New Xml.Xsl.XsltSettings
@@ -128,9 +149,18 @@ Module Metadata
         End Try
     End Function
 
-
-    Public Sub createMetadata(ByVal m_transectName As String)
+    ''' <summary>
+    ''' Creates metadata for the given DSAS layer
+    ''' </summary>
+    ''' <param name="lyrname">Name of layer to create metadata for</param>
+    ''' <param name="lyrGenericName">Type of layer</param>
+    ''' <param name="params">Layer type specific parameters that are needed in metadata creation</param>
+    Public Sub createMetadata(ByVal lyrname As String, Optional lyrGenericName As String = "transect", Optional params As Dictionary(Of String, String) = Nothing)
         DSASUtility.log("Metadata creation starts...")
+
+        If params Is Nothing Then params = New Dictionary(Of String, String)
+        params.Add("layerName", lyrname)
+        params.Add("layerType", lyrGenericName)
 
         Try
             Dim msm As IMetadataSynchronizerManager = getSingleton("esriGeodatabase.MetadataSynchronizer")
@@ -139,10 +169,10 @@ Module Metadata
             Return
         End Try
 
-        Dim mdFile As String = checkForMetadataTemplate()
+        Dim mdFile As String = getMetadataTemplateFilename(lyrGenericName)
         If mdFile Is Nothing Then Exit Sub
 
-        Dim pMD As IMetadata = MapUtility.findFeatureLayer(m_transectName, "transect").FeatureClass
+        Dim pMD As IMetadata = MapUtility.findFeatureLayer(lyrname, lyrGenericName).FeatureClass
         ' We need to make sure FGDC syncer is enabled so we can have it do some work for us.
         setSyncers()
         ' We synchronize to ensure that the feature class has metadata created and populated.
@@ -158,18 +188,21 @@ Module Metadata
         'Save bounding and spref sections for later use
         Dim boundingXml As String = iXPS.GetXml("idinfo/spdom/bounding")
         Dim sprefXml As String = iXPS.GetXml("spref")
-        ' Read template metadata into feature class metadata
-        iXPS.SetXml(My.Computer.FileSystem.ReadAllText(mdFile))
 
-        ' Set misc sections that DSAS has to populate during transect creation
-        setMetadataValue(iXPS, "idinfo/citation/citeinfo/title", m_transectName + " - Digital Shoreline Analysis System Version " + DSAS.dsasVersion + " Transect Feature Class")
+        ' Read template metadata
+        Dim mdTxt = My.Computer.FileSystem.ReadAllText(mdFile)
+        ' Special handling for attributes that have confidence interval built into their name
+        mdTxt = mdTxt.Replace("___CI___", CI.getCIFor(My.Settings.Confidence_Interval).fieldNameCompatible)
+
+        ' Set feature class metadata
+        iXPS.SetXml(mdTxt)
+
+        ' Set misc sections that DSAS has to populate
         setMetadataValue(iXPS, "idinfo/citation/citeinfo/pubdate", Format(Today, "yyyyMMdd"))
         setMetadataValue(iXPS, "idinfo/timeperd/timeinfo/sngdate/caldate", Format(Today, "yyyyMMdd"))
         setMetadataValue(iXPS, "metainfo/metd", Format(Today, "yyyyMMdd"))
         setMetadataValue(iXPS, "metainfo/metrd", Format(Today, "yyyyMMdd"))
 
-
-        ' Transect Features Generated. Parameters Used: baseline layer=MA_Baseline, baseline group field=group_1, transect spacing=100 meters, transect length=100 meters, cast-direction=right, shoreline uncertainty field name=accuracy, baseline location=onshore, cast method=simple, smoothing distance=10, flip baselines=selected. For additional details on these parameters, please see the DSAS help file distributed with the DSAS software, or visit the USGS website at: http://woodshole.er.usgs.gov/project-pages/dsas/.
 
         ' Empty out bounding and spref sections that were prefilled by synchronization
         setMetadataValue(iXPS, "idinfo/spdom/bounding", "DSAS")
@@ -188,96 +221,163 @@ Module Metadata
         setMetadataValue(iXPS, "spref/horizsys/planar/planci/coordrep/absres", "1.000000")
         setMetadataValue(iXPS, "spref/horizsys/planar/planci/coordrep/ordres", "1.000000")
 
-        ' Do procstep
-        ' First wipe out any procstep's that might pre-exist (in template) and also ensure that procstep element is added if not already there
-        iXPS.SetPropertyX("dataqual/lineage/procstep", "", esriXmlPropertyType.esriXPTText, esriXmlSetPropertyAction.esriXSPAAddOrReplace, False)
-        iXPS.DeleteProperty("dataqual/lineage/procstep")
+        ' Append DSAS mandatory text to "purpose" element
+        Dim purpose As String = getValueByXpath("idinfo/descript/purpose", iXPS)
+        Dim purposeEpilogue = DSAS.layerTypes(lyrGenericName)("purposeEpilogue")
+        If Not purpose.Contains(purposeEpilogue) Then purpose = purpose.Trim + " " + purposeEpilogue
+        setMetadataValue(iXPS, "idinfo/descript/purpose", purpose)
+
+        ' Copy procstep from source - if there is one
+        Dim mdSource As String = DSAS.layerTypes(lyrGenericName)("metadataSource")
+        If mdSource Is Nothing Then
+            ' First wipe out any procstep's that might pre-exist (in template) and also ensure that procstep element is added if not already there
+            iXPS.SetPropertyX("dataqual/lineage/procstep", "", esriXmlPropertyType.esriXPTText, esriXmlSetPropertyAction.esriXSPAAddOrReplace, False)
+            iXPS.DeleteProperty("dataqual/lineage/procstep")
+        Else
+            Dim procstepFromSource As String = getSnippetFrom(layernameConvert(lyrname, lyrGenericName, mdSource), "dataqual/lineage")
+            If procstepFromSource IsNot Nothing Then insertSnippetInto(iXPS, "dataqual/lineage", procstepFromSource)
+        End If
         ' Then insert procstep 
-        iXPS.SetXml(decorateXml(procstepInsert(iXPS.GetXml("/metadata"), procdescStringForTransectCast())))
+        Dim procdesc As String = procdescStringFor(params)
+        If procdesc IsNot Nothing Then iXPS.SetXml(decorateXml(procstepInsert(iXPS.GetXml("/metadata"), procdesc)))
+
+        Dim title As String = lyrname + " - Digital Shoreline Analysis System Version " + DSAS.dsasVersion + " " + StrConv(DSAS.layerTypes(lyrGenericName)("friendlyName"), VbStrConv.ProperCase) + " Feature Class"
+        setMetadataValue(iXPS, "idinfo/citation/citeinfo/title", title)
+
+        setMetadataValue(iXPS, "idinfo/crossref/citation/citeinfo/othercit", "Please use the following citation: Himmelstoss, E.A., Farris, A.S., Henderson, R.E., Kratzmann, M.G., Ergul, A., Zhang, O., Zichichi, J.L., Thieler, E.R., 2018, Digital Shoreline Analysis System (v5.0): U.S. Geological Survey software")
+        setMetadataValue(iXPS, "eainfo/detailed/enttyp/enttypl", params("layerName"))
 
         'Dim FGDCSync As New FGDCSynchronizer
         'FGDCSync.Update(iXPS, "SpatialReference", CType(GeoDB.GeodbFeatureClass, IGeoDataset).SpatialReference)
         'FGDCSync.Update(iXPS, "DDExtent", CType(GeoDB.GeodbFeatureClass, IGeoDataset).Extent)
         'FGDCSync.Update(iXPS, "NativeExtent", CType(GeoDB.GeodbFeatureClass, IGeoDataset).Extent)
 
-        ' iXPS.GetXml("/metadata")
-
         ' Plug property set with manipulated xml metadata back into the object
         pMD.Metadata = iXPS
         DSASUtility.log("Metadata created.")
     End Sub
 
-    Private Function procdescStringForTransectCast() As String
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    ''' <param name="params">Parameters that may be recorded in process description</param>
+    ''' <returns></returns>
+    Private Function procdescStringFor(params As Dictionary(Of String, String)) As String
+        Dim lyrType As String = params("layerType")
+        If lyrType = "transect" Then
+            Return procdescStringForTransectCast(params)
+        ElseIf lyrType = "rates" Then
+            params("otherLayerName") = DSASUtility.layernameConvert(params("layerName"), "rates", "intersect")
+            Return procdescStringForRatesAndIntersect(params)
+        ElseIf lyrType = "intersect" Then
+            params("otherLayerName") = DSASUtility.layernameConvert(params("layerName"), "intersect", "rates")
+            Return procdescStringForRatesAndIntersect(params)
+        ElseIf lyrType = "forecast" Then
+            params("otherLayerName") = DSASUtility.layernameConvert(params("layerName"), "forecast", "forecast_uncy")
+            Return procdescStringForForecast(params)
+        ElseIf lyrType = "forecast_uncy" Then
+            params("otherLayerName") = DSASUtility.layernameConvert(params("layerName"), "forecast_uncy", "forecast")
+            Return procdescStringForForecast(params)
+        ElseIf lyrType = "forecast_points" Then
+            Return procdescStringForForecastPoints(params)
+        End If
+        Return Nothing
+    End Function
+
+    ''' <summary>
+    ''' Prepares the <procdesc/> metadata element content based on current settings for newly created transect layer
+    ''' </summary>
+    ''' <param name="params">Parameters that may be recorded in process description</param>
+    ''' <returns>String content for the <procdesc/> metadata element</returns>
+    Private Function procdescStringForTransectCast(params As Dictionary(Of String, String)) As String
         Dim baseCnt As Integer = MapUtility.GetSelectedCount(MapUtility.findFeatureLayer(My.Settings.Baseline_Feature_Layer, "baseline"))
-        Dim baseMsg As String = IIf(baseCnt = 0, "", " on Selected Baseline Features Only")
-        Dim procdesc As String = "Transect Features Generated using DSAS v" + DSAS.dsasVersion + baseMsg + ". Parameters Used: "
+        Dim baseMsg As String = IIf(baseCnt = 0, "", " on selected baseline features only")
+        Dim procdesc As String = "Transect features generated using DSAS v" + DSAS.dsasVersion + baseMsg + ". Parameters Used: "
         procdesc += "baseline layer=" + DSASUtility.nv(My.Settings.Baseline_Feature_Layer, "NULL") + ", "
         procdesc += "baseline group field=" + DSASUtility.nv(My.Settings.Baseline_Group_Field, "NULL") + ", "
         procdesc += "transect spacing=" + DSASUtility.nv(My.Settings.Spacing.ToString, "NULL") + " meters, "
         procdesc += "search distance=" + DSASUtility.nv(My.Settings.Search_Distance.ToString, "NULL") + " meters, "
         procdesc += "land direction=" + IIf(My.Settings.Land_On_Right_Side, "right", "left") + ", "
         procdesc += "shoreline intersection=" + IIf(My.Settings.Seaward, "seaward", "landward") + ", "
-        'procdesc += "cast method=" + IIf(My.Settings.Transect_Leg_Length = 0, "simple", "smoothed") + ", "
-        procdesc += "smoothing distance=" + DSASUtility.nv(My.Settings.Transect_Leg_Length.ToString, "NULL") + " meters, "
-        procdesc += "For additional details on these parameters, please see the DSAS help file distributed with the DSAS software, or visit the USGS website at: http://pubs.usgs.gov/of/2008/1278/ ."
+        procdesc += String.Format("File produced = {0} .", params("layerName"))
+        procdesc += "For additional details on these parameters, please see the DSAS help file distributed with the DSAS software, or visit the USGS website at: https://woodshole.er.usgs.gov/project-pages/DSAS/ "
         Return procdesc
     End Function
 
 
-    ' Rate Calculations Performed.  Parameters Used: 
-    ' shoreline layer=MA_Shore, 
-    ' shoreline date field=date_, 
-    ' shoreline uncertainty field name=accuracy, 
-    ' the default accuracy=6 meters, 
-    ' shoreline intersection parameters =nearest, 
-    ' stats calculations=[Linear Regression Rate (LRR), Weighted Linear Regression (WLR), Least Median of Squares (LMS)], 
-    ' shoreline threshold=4, 
-    ' confidence interval=99.9 . 
-    ' Output rate table name=XYZ_rates.
-
-    Private Function procdescStringForCalculateStats(ByVal selectedStats As String, ByVal threshold As String, ByVal outputTablename As String) As String
+    ''' <summary>
+    ''' Prepares the <procdesc/> metadata element content based on current settings and provided parameters for newly created rates and intersect layer
+    ''' </summary>
+    ''' <param name="params">Parameters that may be recorded in process description</param>
+    ''' <returns>String content for the <procdesc/> metadata element</returns>
+    Private Function procdescStringForRatesAndIntersect(params As Dictionary(Of String, String)) As String
         Dim shoreCnt As Integer = MapUtility.GetSelectedCount(MapUtility.findFeatureLayer(My.Settings.Shoreline_Feature_Layer, "shoreline"))
-        Dim shoreMsg As String = IIf(shoreCnt = 0, "", " on Selected Shoreline Features Only")
-        Dim procdesc As String = "Rate Calculations Performed" + shoreMsg + ".  Parameters Used: "
+        Dim shoreMsg As String = IIf(shoreCnt = 0, "", " on selected shoreline features Only")
+        Dim procdesc As String = "Shoreline intersects and rate calculations performed" + shoreMsg + ". Parameters Used: "
         procdesc += "shoreline layer=" + DSASUtility.nv(My.Settings.Shoreline_Feature_Layer, "NULL") + ", "
         procdesc += "shoreline date field=" + DSASUtility.nv(My.Settings.Shoreline_Date_Field, "NULL") + ", "
         procdesc += "shoreline uncertainty field name=" + DSASUtility.nv(My.Settings.Shoreline_Uncertainty_Field, "NULL") + ", "
         procdesc += "the default accuracy=" + DSASUtility.nv(My.Settings.Uncertainty.ToString(), "NULL") + " meters, "
         procdesc += "shoreline intersection=" + IIf(nv(DSAS.seaward, My.Settings.Seaward), "seaward", "landward") + ", "
-        procdesc += "stats calculations=" + DSASUtility.nv(selectedStats, "NULL") + ", "
-        procdesc += "shoreline threshold=" + DSASUtility.nv(threshold, "NULL") + ", "
-        procdesc += "confidence interval=" + DSASUtility.nv(My.Settings.Confidence_Interval.ToString, "NULL") + "%, "
-        procdesc += "Output rate table name=" + DSASUtility.nv(outputTablename, "NULL") + ". "
+        procdesc += "stats calculations=" + DSASUtility.nv(params("selectedCalcs"), "NULL") + ", "
+        procdesc += "shoreline threshold=" + IIf(My.Settings.Intersect_Threshold_Enforced, My.Settings.Intersect_Threshold_Value.ToString, "none") + ", "
+        procdesc += "confidence interval=" + DSASUtility.nv(My.Settings.Confidence_Interval.ToString, "NULL") + "%. "
+        procdesc += String.Format("Files produced = {0} , {1} .", params("layerName"), params("otherLayerName"))
         Return procdesc
     End Function
 
-    Public Sub updateMetadataForCalculateStats(ByVal selectedStats As String, ByVal threshold As String, ByVal outputTablename As String)
-        DSASUtility.log("Metadata update starts...")
-        Dim mdFile As String = checkForMetadataTemplate()
-        If mdFile Is Nothing Then Exit Sub
 
-        ' First we synchronize to ensure that the feature class has metadata created.
-        Dim pMD As IMetadata = TransectLyrToolCtl.currentTransectLayer.FeatureClass
-        ' Load up metadata associated with the feature class
-        Dim iXPS As IXmlPropertySet2 = pMD.Metadata
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    ''' <param name="params">Parameters that may be recorded in process description</param>
+    ''' <returns></returns>
+    Private Function procdescStringForForecast(params As Dictionary(Of String, String)) As String
 
-        ' This makes sure dataqual/lineage is there (if DSAS did not create the metadata before)
-        iXPS.SetPropertyX("dataqual/lineage", "", esriXmlPropertyType.esriXPTText, esriXmlSetPropertyAction.esriXSPAAddIfNotExists, False)
+        Return String.Format("Shoreline forecast (polyline and point) and forecast uncertainty (polygon) calculated. A = {0} year shoreline forecast with uncertainty was performed using: input rate file (containing LRR values used in forecasting) = {1}, and intersect file = {2}. Files produced = {3} , {4} , {5} .",
+                             params("forecastPeriod"),
+                             layernameConvert(params("layerName"), params("layerType"), "rates"),
+                             layernameConvert(params("layerName"), params("layerType"), "intersect"),
+                             params("layerName"),
+                             params("otherLayerName"),
+                             layernameConvert(params("layerName"), params("layerType"), "forecast_points")
+                             )
+    End Function
 
-        ' Then insert procstep 
-        iXPS.SetXml(decorateXml(procstepInsert(iXPS.GetXml("/metadata"), procdescStringForCalculateStats(selectedStats, threshold, outputTablename))))
 
-        ' Plug property set with manipulated xml metadata back into the object
-        pMD.Metadata = iXPS
-        DSASUtility.log("Metadata updated.")
-    End Sub
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    ''' <param name="params">Parameters that may be recorded in process description</param>
+    ''' <returns></returns>
+    Private Function procdescStringForForecastPoints(params As Dictionary(Of String, String)) As String
 
+        Return String.Format("Shoreline forecast (polyline and point) and forecast uncertainty (polygon) calculated. A = {0} year shoreline forecast with uncertainty was performed using: input rate file (containing LRR values used in forecasting) = {1}, and intersect file = {2}. File produced = {3} .",
+                             params("forecastPeriods"),
+                             layernameConvert(params("layerName"), params("layerType"), "rates"),
+                             layernameConvert(params("layerName"), params("layerType"), "intersect"),
+                             layernameConvert(params("layerName"), params("layerType"), "forecast_points")
+                             )
+    End Function
+
+
+    ''' <summary>
+    ''' Decorate given xml body with the customary xml headers
+    ''' </summary>
+    ''' <param name="xml"></param>
+    ''' <returns>Decorated xml string</returns>
     Private Function decorateXml(ByVal xml As String) As String
         xml = xml.Trim
         If xml.StartsWith("<?xml ") Then Return xml
         Return "<?xml version=""1.0"" ?>" + vbCrLf + "<!-- <!DOCTYPE metadata SYSTEM ""http://www.esri.com/metadata/esriprof80.dtd"">  -->" + vbCrLf + xml
     End Function
 
+    ''' <summary>
+    ''' Inserts a new <procstep/> element into the given xml
+    ''' </summary>
+    ''' <param name="xml">Xml string to be modified</param>
+    ''' <param name="procdesc">Contents of <procdesc/> element to be inserted as part of <procstep/> element</param>
+    ''' <returns>Modified xml</returns>
     Public Function procstepInsert(ByVal xml As String, ByVal procdesc As String) As String
         Dim mdDoc As New XmlDocument
         mdDoc.LoadXml(xml)
@@ -296,17 +396,33 @@ Module Metadata
         eltNode = mdDoc.CreateElement("procdate")
         eltNode.AppendChild(mdDoc.CreateTextNode(Format(Today, "yyyyMMdd")))
         anchorNode.AppendChild(eltNode)
+        ' Do proctime
+        eltNode = mdDoc.CreateElement("proctime")
+        eltNode.AppendChild(mdDoc.CreateTextNode(Format(Now, "HH:mm:ss")))
+        anchorNode.AppendChild(eltNode)
 
         Return mdDoc.OuterXml
     End Function
 
-    Private Sub setMetadataValue(ByVal iXPS As IXmlPropertySet2, ByVal name As String, ByVal value As String, Optional ByVal action As esriXmlSetPropertyAction = esriXmlSetPropertyAction.esriXSPAAddOrReplace)
+    ''' <summary>
+    ''' Helper function to set the value of an xml element
+    ''' </summary>
+    ''' <param name="iXPS">Xml to be modified</param>
+    ''' <param name="name">Xml path to be modified</param>
+    ''' <param name="value">Element value to modify with</param>
+    Private Sub setMetadataValue(ByVal iXPS As IXmlPropertySet2, ByVal name As String, ByVal value As String)
         If value Is Nothing OrElse value.Trim = "" Then value = "NULL"
-        iXPS.SetPropertyX(name, value, esriXmlPropertyType.esriXPTText, action, False)
+        iXPS.SetPropertyX(name, value, esriXmlPropertyType.esriXPTText, esriXmlSetPropertyAction.esriXSPAAddOrReplace, False)
     End Sub
 
-    Private Function checkForMetadataTemplate() As String
-        Dim mdFile As String = DSASUtility.getMetadataFolder() + "\DSAS_Metadata_Template.xml"
+    ''' <summary>
+    ''' Get the metedata template filename for the given layer type 
+    ''' </summary>
+    ''' <param name="mdTemplate"></param>
+    ''' <returns>String containing the full filepath name for the metadata template</returns>
+    Private Function getMetadataTemplateFilename(Optional mdTemplate As String = "Transect") As String
+        Dim mdFolder As String = DSASUtility.getMetadataFolder()
+        Dim mdFile As String = String.Format("{0}\DSAS_Metadata_Template_{1}.xml", mdFolder, mdTemplate)
         If Not System.IO.File.Exists(mdFile) Then
             log(TraceLevel.Error, "Unable to find metadata template file: " + mdFile)
             Return Nothing
@@ -317,10 +433,9 @@ Module Metadata
     ''' <summary>
     ''' Loads metadata settings tab from DSAS metadata template file.
     ''' </summary>
-    ''' <param name="frm"></param>
-    ''' <remarks></remarks>
+    ''' <param name="frm">Default Settings form to set metadata values in</param>
     Public Sub LoadMetadataTab(ByVal frm As SetDefaultsForm)
-        Dim mdFile As String = checkForMetadataTemplate()
+        Dim mdFile As String = getMetadataTemplateFilename()
         If mdFile Is Nothing Then Exit Sub
 
         Dim mdDoc As XPathDocument
@@ -350,13 +465,25 @@ Module Metadata
         End Try
     End Sub
 
+
     ''' <summary>
     ''' Saves metadata settings tab information to DSAS metadata template file.
     ''' </summary>
-    ''' <param name="frm"></param>
-    ''' <remarks></remarks>
+    ''' <param name="frm">Default Settings form to save metadata values from</param>
     Public Sub SaveMetadataTab(ByVal frm As SetDefaultsForm)
-        Dim mdFile As String = checkForMetadataTemplate()
+        For Each lyrGenericName As String In DSAS.layerTypes.Keys
+            SaveMetadataTabInner(frm, lyrGenericName)
+        Next
+    End Sub
+
+
+    ''' <summary>
+    ''' Saves metadata settings tab information to DSAS metadata template file.
+    ''' </summary>
+    ''' <param name="frm">Default Settings form to save metadata values from</param>
+    ''' <param name="lyrGenericName">The type of layer template to save to</param>
+    Private Sub SaveMetadataTabInner(ByVal frm As SetDefaultsForm, lyrGenericName As String)
+        Dim mdFile As String = getMetadataTemplateFilename(lyrGenericName)
         If mdFile Is Nothing Then Exit Sub
 
         Dim mdDoc As New XmlDocument
@@ -368,7 +495,7 @@ Module Metadata
             setValueByXpath("//origin", frm.origin.Text, mdNav)
             setValueByXpath("//abstract", frm.abstract.Text, mdNav)
             setValueByXpath("//purpose", frm.purpose.Text, mdNav)
-            'setValueByXpath("//current", frm.current.Text, mdNav)
+            setValueByXpath("//current", frm.current.Text, mdNav)
             setValueByXpath("//update", frm.status_update.Text, mdNav)
             setValueByXpath("//progress", frm.progress.Text, mdNav)
             setValueByXpath("//accconst", frm.accconst.Text, mdNav)
@@ -396,6 +523,7 @@ Module Metadata
         End Try
     End Sub
 
+
     ''' <summary>
     ''' Given an xpath string and XPathNavigator object for an existing XML document, returns true 
     ''' if the (first) node selected by the xpath expression has a value considered empty by DSAS.
@@ -403,10 +531,8 @@ Module Metadata
     ''' <param name="xp"></param>
     ''' <param name="nav"></param>
     ''' <returns></returns>
-    ''' <remarks></remarks>
     Private Function hasEmptyValue(ByVal xp As String, ByVal nav As XPathNavigator) As String
-        Dim val As String = getValueByXpath(xp, nav).Trim
-        Return val = "" OrElse val = "From User Interface" OrElse val = "NULL"
+        Return getValueByXpath(xp, nav).Trim = ""
     End Function
 
     ''' <summary>
@@ -416,7 +542,6 @@ Module Metadata
     ''' <param name="xp"></param>
     ''' <param name="nav"></param>
     ''' <returns></returns>
-    ''' <remarks></remarks>
     Private Function getValueByXpath(ByVal xp As String, ByVal nav As XPathNavigator) As String
         nav = nav.SelectSingleNode(xp)
         If nav Is Nothing Then
@@ -429,16 +554,30 @@ Module Metadata
     End Function
 
     ''' <summary>
+    ''' Given an xpath string and IXmlPropertySet2 object for an existing XML document, returns the value of 
+    ''' the (first) node selected by the xpath expression. If no match, empty string is returned.
+    ''' </summary>
+    ''' <param name="name"></param>
+    ''' <param name="iXPS"></param>
+    ''' <returns></returns>
+    Private Function getValueByXpath(name As String, iXPS As IXmlPropertySet2) As String
+        Dim nameParts As String() = name.Split("/")
+        If Not name.EndsWith("]") Then name += "[0]"
+        getValueByXpath = iXPS.GetXml(name)
+        getValueByXpath = getValueByXpath.Replace(String.Format("<{0}>", nameParts(nameParts.Length - 1)), "")
+        getValueByXpath = getValueByXpath.Replace(String.Format("</{0}>", nameParts(nameParts.Length - 1)), "")
+    End Function
+
+    ''' <summary>
     ''' Given an xpath string, a value string and XPathNavigator object for an existing XML document, sets the value of 
     ''' the (first) node selected by the xpath expression. If no match, no action is taken.
     ''' </summary>
     ''' <param name="xp"></param>
     ''' <param name="nav"></param>
-    ''' <remarks></remarks>
     Private Sub setValueByXpath(ByVal xp As String, ByVal val As String, ByVal nav As XPathNavigator)
         nav = nav.SelectSingleNode(xp)
         If nav IsNot Nothing Then
-            If val Is Nothing OrElse val.Trim = "" Then val = "NULL"
+            If val Is Nothing OrElse val.Trim = "" Then val = ""
             nav.SetValue(val)
         End If
     End Sub
@@ -475,26 +614,34 @@ Module Metadata
         End If
     End Function
 
+
+    ''' <summary>
+    ''' Retrieve desired subsection of the layer's metadata
+    ''' </summary>
+    ''' <param name="lyrName">Name of layer with metadata</param>
+    ''' <param name="name">The xpath for the subsection of metadata</param>
+    ''' <returns></returns>
+    Function getSnippetFrom(lyrName As String, name As String) As String
+        Dim pMD As IMetadata = MapUtility.findFeatureLayer(lyrName).FeatureClass
+        Dim iXPS As IXmlPropertySet2 = pMD.Metadata
+        Return iXPS.GetXml(name)
+    End Function
+
+    ''' <summary>
+    ''' Insert a snippet of xml into another xml
+    ''' </summary>
+    ''' <param name="iXPS">Object holding target xml</param>
+    ''' <param name="name">Xpath location of insertion point</param>
+    ''' <param name="snippetXml">Xml to be inserted</param>
+    Sub insertSnippetInto(iXPS As IXmlPropertySet2, name As String, snippetXml As String)
+        Dim aGuid As String = System.Guid.NewGuid().ToString
+        iXPS.SetPropertyX(name, aGuid, esriXmlPropertyType.esriXPTText, esriXmlSetPropertyAction.esriXSPAAddOrReplace, False)
+        Dim Xml As String = iXPS.GetXml("")
+        Dim nameParts As String() = name.Split("/")
+        Dim textToReplace As String = String.Format("<{0}>{1}</{0}>", nameParts(nameParts.Length - 1), aGuid)
+        Xml = Xml.Replace(textToReplace, snippetXml)
+        iXPS.SetXml(Xml)
+    End Sub
+
 End Module
 
-
-' procstep template
-'
-'<dataqual>
-'	<logic>These data were generated using DSAS, an automated software program which does perform checks for fidelity of the input features. Any testing on these data should be carried out by end-users to ensure fidelity of relationships.</logic>
-'	<complete>This dataset contains all the transects automatically generated by the DSAS software application.</complete>
-'	<lineage>
-'		<procstep>
-'			<procdesc>Transect Features Generated.  Parameters Used: baseline layer=MA_Baseline, baseline group field=group_1, transect spacing=100 meters, transect length=100 meters, cast-direction=right, shoreline uncertainty field name=accuracy, baseline location=onshore, cast method=simple, smoothing distance=10, flip baselines=selected. For additional details on these parameters, please see the DSAS help file distributed with the DSAS software, or visit the USGS website at: http://woodshole.er.usgs.gov/project-pages/dsas/.</procdesc>
-'			<procdate>20080513</procdate>
-'		</procstep>
-'		<procstep>
-'			<procdesc>Rate Calculations Performed.  Parameters Used: shoreline layer=MA_Shore, shoreline date field=date_, shoreline uncertainty field name=accuracy, the default accuracy=4.4 meters, shoreline intersection parameters =nearest, stats calculations=[End Point Rate (EPR), Linear Regression Rate (LRR), Weighted Linear Regression (WLR)], shoreline threshold=4, confidence interval=99.9 . Output rate table name=XYZ_rates.</procdesc>
-'			<procdate>20080513</procdate>
-'		</procstep>
-'		<procstep>
-'			<procdesc>Rate Calculations Performed.  Parameters Used: shoreline layer=MA_Shore, shoreline date field=date_, shoreline uncertainty field name=accuracy, the default accuracy=6 meters, shoreline intersection parameters =nearest, stats calculations=[Linear Regression Rate (LRR), Weighted Linear Regression (WLR), Least Median of Squares (LMS)], shoreline threshold=4, confidence interval=99.9 . Output rate table name=XYZ_rates.</procdesc>
-'			<procdate>20080514</procdate>
-'		</procstep>
-'	</lineage>
-'</dataqual>

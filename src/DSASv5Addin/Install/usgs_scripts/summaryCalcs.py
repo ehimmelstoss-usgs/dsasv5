@@ -13,6 +13,7 @@
 # afarris@usgs.gov 2018Jan02 further refinements to calculation of nstar
 # afarris@usgs.gov 2018Jan07 minor changes to SCE and NSM
 # afarris@usgs.gov 2018Feb10 now check that lists passed to calcStuff are not empty 
+# afarris@usgs.gov 2018jun01 made some changes suggested by code review 
 
 from math import sqrt
 def get_summary(summary_dict):
@@ -317,7 +318,7 @@ def calcStuff(rateIn,uncyIn,trIDIn,rateName,groupName):
                 if (r) < 0:
                     y= y + r
             if numEro > 0:
-                aveEro = y/numEro
+                aveEro = float(y) / float(numEro)
             else:
                 aveEro = None
             # Now calculate the avearage accretion
@@ -326,7 +327,7 @@ def calcStuff(rateIn,uncyIn,trIDIn,rateName,groupName):
                 if (r) > 0:
                     y= y + r
             if numAcc > 0:
-                aveAcc = y/numAcc
+                aveAcc = float(y) / float(numAcc)
             else:
                 aveAcc = None
 

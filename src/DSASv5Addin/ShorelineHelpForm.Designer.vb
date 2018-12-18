@@ -68,6 +68,7 @@ Partial Class ShorelineHelpForm
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.LinkLabelHazardsPortal)
         Me.Controls.Add(Me.textAreaShorelineTypeField)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "ShorelineHelpForm"
         Me.Text = "Shoreline Type Field"
         Me.ResumeLayout(False)

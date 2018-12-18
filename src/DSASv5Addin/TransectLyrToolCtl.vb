@@ -44,7 +44,7 @@ Public Class TransectLyrToolCtl
         Try
             RemoveLayer(lyr.Name)
             If TypeOf lyr Is IFeatureLayer Then
-                If GeoDB.layerIsValid(lyr, "transect", True) Then
+                If GeoDB.layerIsValid(lyr, "transect", DSAS.layerCheckingMode.detection) Then
                     If GeoDB.geodbIsCurrent(lyr) Then
                         Return MyBase.Add(lyr.Name, lyr)
                     Else

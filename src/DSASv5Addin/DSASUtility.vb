@@ -117,14 +117,20 @@ Module DSASUtility
     End Function
 
 
-    Sub clipToShorelineEnvelope(ByRef xect As IPolyline, xectMidPt As IPoint)
+    Sub clipToShorelineEnvelope(ByRef xect As IPolyline, Optional xectMidPt As IPoint = Nothing)
         If DSAS.shoreFc Is Nothing Then
             log("Error: Casting without shoreline featureclass")
             Exit Sub
         End If
-        Dim shoreCache As New ESRI.ArcGIS.Carto.FeatureCacheClass
-        shoreCache.Initialize(xectMidPt, xect.Length * 1.01)  'Allow for 1% error
-        shoreCache.AddFeatures(DSAS.shoreFc)
+
+        If xectMidPt Is Nothing Then
+            xectMidPt = New PointClass
+            xect.QueryPoint(esriSegmentExtension.esriNoExtension, 0.5, False, xectMidPt)
+        End If
+
+        Dim shoreCache As IFeatureCache2 = New ESRI.ArcGIS.Carto.FeatureCacheClass
+        shoreCache.Initialize(xectMidPt, xect.Length * 2.02)  'Allow for 1% error
+        shoreCache.AddFeatures(DSAS.shoreFc, Nothing)
 
         ' Add each shore intersection
         Dim distToDesiredDirection As Double
@@ -185,22 +191,8 @@ Module DSASUtility
 
         mirrorTransect(pNormal)
 
-        ''AE: Do we really need this?
-        'Dim topoOperator As ITopologicalOperator
-        'Dim polyLn As IPolyline
-        'Dim pSegColl As ISegmentCollection
-        'pSegColl = DirectCast(New Polyline, ISegmentCollection)
-        'pSegColl.AddSegment(CType(pNormal, ISegment))
-        ''make sure the line generated is topologically correct
-        'polyLn = CType(pSegColl, IPolyline)
-        'topoOperator = CType(polyLn, ITopologicalOperator)
-        'topoOperator.Simplify()
+        If My.Settings.ClipTransectsToShorelineExtent Then clipToShorelineEnvelope(pNormal, midPt)
 
-        'clipToShorelineEnvelope(polyLn, bl, midPt)
-
-        'Return polyLn
-
-        clipToShorelineEnvelope(pNormal, midPt)
         Return pNormal
 
     End Function
@@ -332,14 +324,26 @@ Module DSASUtility
         xectPointsNew.AddPoint(ptFromNew)
         xectPointsNew.AddPoint(ptFrom)
         xectPointsNew.AddPoint(ptTo)
-        xectPoints.SetPointCollection(xectPointsNew)
+
         ' Before the call to mirror, transect is one side only and always on the right side
         ' The other side has now been added but we need to reverse the transect if land on left side
         ' to maintain sea-to-shore transect orientation.
         If Not My.Settings.Land_On_Right_Side Then
-            Dim ic As ICurve = DirectCast(xectPoints, ICurve)
+            Dim ic As ICurve = DirectCast(xectPointsNew, ICurve)
             ic.ReverseOrientation()
         End If
+
+        ' At this point transect is going from sea to land
+        ' Collapse one side wrt the baseline if on or offshore casting is selected
+        Dim anchorPointClone As IPoint = xectPointsNew.Point(1)
+        If My.Settings.CastDirection = "ONSHORE" Then
+            'collapse land side point of the transect onto anchor point
+            xectPointsNew.UpdatePoint(2, anchorPointClone)
+        ElseIf My.Settings.CastDirection = "OFFSHORE" Then
+            'collapse sea side point of the transect onto anchor point
+            xectPointsNew.UpdatePoint(0, anchorPointClone)
+        End If
+        xectPoints.SetPointCollection(xectPointsNew)
     End Sub
 
 
@@ -660,25 +664,6 @@ Module DSASUtility
 
 
 
-    Public Function makeDataFilename(ByVal xectLayerName As String) As String
-        Return getAppDataFolder() & "\data\" & Format(Date.Now, "yyyyMMdd_HHmmss") & "." & xectLayerName
-    End Function
-
-
-    ''' <summary>
-    ''' 
-    ''' </summary>
-    ''' <param name="dataFilename"></param>
-    ''' <returns></returns>
-    ''' <remarks>C:\x\y\z\20080924_152523.AE01.in.xml -> AE01_20080924_152523</remarks>
-    Public Function makeOutputTablename(ByVal dataFilename As String) As String
-        Dim parts As String()
-        parts = dataFilename.Split("\"c)
-        parts = parts(parts.Length - 1).Split("."c)
-        Return parts(1) & "_rates_" & parts(0)
-    End Function
-
-
     ''' <summary>
     ''' Returns the input value rounded if the value is numeric
     ''' </summary>
@@ -813,5 +798,59 @@ Module DSASUtility
             Return val
         End If
     End Function
+
+    ''' <summary>
+    ''' Converts a given DSAS layer name to the corresponding name for another type of DSAS layer
+    ''' </summary>
+    ''' <param name="fromLyrName">A DSAS layer name to use as temlate</param>
+    ''' <param name="fromLyrGenericType">The type of the DSAS layer used as template</param>
+    ''' <param name="toLyrGenericType">Type of DSAS layer to convert the name to</param>
+    ''' <returns>String containig converted layer name</returns>
+    Public Function layernameConvert(fromLyrName As String, fromLyrGenericType As String, toLyrGenericType As String) As String
+        Dim xectName As String = ""
+        Dim datePart As String = ""
+        Dim forecastPeriodPart As String = ""
+        If fromLyrGenericType = "transect" Then
+            xectName = fromLyrName
+            datePart = Format(Date.Now, "yyyyMMdd_HHmmss")
+        Else
+            Dim splitter As String = "_" + fromLyrGenericType
+            If fromLyrGenericType <> "forecast_points" Then splitter += "_"
+            Dim parts As String() = fromLyrName.Split(New String() {splitter}, StringSplitOptions.None)
+            Dim prefix As String = parts(0)
+            Dim suffix As String = parts(1)
+            If fromLyrGenericType = "rates" OrElse fromLyrGenericType = "intersect" Then
+                xectName = prefix
+                datePart = suffix
+            ElseIf fromLyrGenericType.StartsWith("forecast") Then
+                datePart = prefix.Substring(prefix.Length - "yyyyMMdd_HHmmss".Length)
+                xectName = prefix.Substring(0, prefix.Length - "yyyyMMdd_HHmmss".Length - 1)
+                forecastPeriodPart = suffix
+            End If
+        End If
+
+        If toLyrGenericType = "transect" Then
+            Return xectName
+        Else
+            If toLyrGenericType.StartsWith("forecast") Then
+                Dim partsArray = {xectName, datePart, toLyrGenericType}
+                If toLyrGenericType <> "forecast_points" AndAlso forecastPeriodPart <> "" Then
+                    ReDim Preserve partsArray(3)
+                    partsArray(3) = forecastPeriodPart
+                End If
+                Return String.Join("_", partsArray)
+            Else
+                Return String.Join("_", {xectName, toLyrGenericType, datePart})
+            End If
+        End If
+    End Function
+
+    ' some_transect_name
+    ' some_transect_name_rates_YYYYMMDD_HHMMSS
+    ' some_transect_name_intersect_YYYYMMDD_HHMMSS
+    ' some_transect_name_YYYYMMDD_HHMMSS_forecast_TT
+    ' some_transect_name_YYYYMMDD_HHMMSS_forecast_uncy_TT
+    ' some_transect_name_YYYYMMDD_HHMMSS_forecast_points
+
 
 End Module

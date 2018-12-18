@@ -13,7 +13,11 @@
                 DSAS.statusBar = My.ThisApplication.StatusBar
             End If
 
-            frm.ShowDialog()
+            If Topology.isInEditSession Then
+                MsgBox("Please close edit session to run Attribute Automator.",, DSAS.MsgBoxTitle)
+            Else
+                frm.ShowDialog()
+            End If
         Catch ex As System.Exception
             DSASUtility.handleException(ex)
             Exit Try
