@@ -3,34 +3,44 @@
     "name": "dsasv5",
     "organization": "U.S. Geological Survey",
     "description": "Digital Shoreline Analysis System version 5.0",
-    "version": "version 5.0, preliminary",
-    "status": "under review",
+    "version": "5.0.20181212.1400",
+    "status": "development",
 
     "permissions": {
       "usageType": "openSource",
       "licenses": [
         {
           "name": "Public Domain, CC0-1.0",
-          "URL": "https://github.com/usgs/dsasv5/blob/master/LICENSE.md"
+          "URL": "https://code.usgs.gov/cch/dsas"
         }
       ]
     },
 
-    "homepageURL": "https://usgs.github.io/dsasv5/",
-    "downloadURL": "https://github.com/usgs/dsasv5/archive/master.zip",
-    "disclaimerURL": "https://github.com/usgs/dsasv5/blob/master/LICENSE.md",
-    "repositoryUrl": "https://github.com/usgs/dsasv5.git",
+    "homepageURL": "https://code.usgs.gov/cch/dsas",
+    "downloadURL": "https://code.usgs.gov/cch/dsas/DSASAddin.zip",
+    "disclaimerURL": "https://code.usgs.gov/cch/dsas/LICENSE.md",
+    "repositoryUrl": "https://code.usgs.gov/cch/dsas.git",
     "vcs": "git",
 
-    "laborHours": null,
+    "laborHours": 0,
 
     "tags": [
+      "USGS",
+      "U.S. Geological Survey",
+      "Woods Hole Coastal and Marine Hazards Research Program",
+      "WHCMHRP",
+      "Coastal Change Hazards",
+      "CCH",
+      "DSAS",
+      "Digital Shoreline Analysis System",
+      "Shoreline change",
       "Shoreline analysis",
       "ArcMap"
     ],
 
     "languages": [
-      "English"
+      "Python",
+      ".NET Framework",
     ],
 
     "contact": {
@@ -39,7 +49,7 @@
     },
 
     "date": {
-      "metadataLastUpdated": "2018-02-14"
+      "metadataLastUpdated": "2018-12-18"
     }
   }
 ]
