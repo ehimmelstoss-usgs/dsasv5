@@ -4,7 +4,7 @@
     "organization": "U.S. Geological Survey",
     "description": "Digital Shoreline Analysis System version 5.0",
     "version": "5.0.20181212.1400",
-    "status": "development",
+    "status": "Development",
 
     "permissions": {
       "usageType": "openSource",
@@ -40,7 +40,7 @@
 
     "languages": [
       "Python",
-      ".NET Framework",
+      ".NET Framework"
     ],
 
     "contact": {
