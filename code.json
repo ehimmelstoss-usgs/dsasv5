@@ -3,8 +3,8 @@
     "name": "dsasv5",
     "organization": "U.S. Geological Survey",
     "description": "Digital Shoreline Analysis System version 5.0",
-    "version": "5.0.20181212.1400",
-    "status": "Development",
+    "version": "5.0.20181221.1313",
+    "status": "Production",
 
     "permissions": {
       "usageType": "openSource",
@@ -49,7 +49,7 @@
     },
 
     "date": {
-      "metadataLastUpdated": "2018-12-18"
+      "metadataLastUpdated": "2018-12-21"
     }
   }
 ]
